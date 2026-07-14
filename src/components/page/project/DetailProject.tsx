@@ -1,6 +1,9 @@
 import { Plus } from "lucide-react";
+import { useModal } from "../../../store";
 
 function DetailProject() {
+    const { openModal } = useModal();
+
     return (
         <aside className="absolute right-0">
             <header>
@@ -21,7 +24,7 @@ function DetailProject() {
             <div>
                 <div>
                     <h1>Task</h1>
-                    <button>
+                    <button onClick={() => openModal("new-task")}>
                         <Plus />
                         Create Task
                     </button>

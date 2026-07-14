@@ -1,7 +1,10 @@
 import { FilterIcon, MoreHorizontal, Plus, SortAsc } from "lucide-react";
 import { Outlet } from "react-router";
+import { useModal } from "../../../store";
 
 function ProjectPage() {
+    const { openModal } = useModal();
+
     return (
         <main className="relative">
             <header>
@@ -19,7 +22,7 @@ function ProjectPage() {
                     <SortAsc />
                     Sort by
                 </button>
-                <button>
+                <button onClick={() => openModal("new-card")}>
                     <Plus />
                     New Card
                 </button>
@@ -56,7 +59,7 @@ function ProjectPage() {
                     </div>
                 </div>
 
-                <button>
+                <button onClick={() => openModal("new-board")}>
                     <Plus />
                 </button>
             </div>

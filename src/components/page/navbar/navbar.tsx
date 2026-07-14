@@ -21,8 +21,11 @@ import {
     SidebarMenuSubItem,
     SidebarRail,
 } from "../../ui/sidebar";
+import { useModal } from "../../../store";
 
 function AppSidebar() {
+    const { openModal, modalName } = useModal();
+
     const navItems = [
         {
             title: "Homework",
@@ -55,7 +58,12 @@ function AppSidebar() {
                     <SidebarGroupLabel className="bg-amber-200 text-sm">
                         My Project
                     </SidebarGroupLabel>
-                    <SidebarMenuAction>
+                    <SidebarMenuAction
+                        onClick={() => {
+                            openModal("new-project");
+                            console.log(modalName);
+                        }}
+                    >
                         <Plus />
                     </SidebarMenuAction>
                     <SidebarGroupContent>
@@ -64,10 +72,7 @@ function AppSidebar() {
                                 <Collapsible key={index} defaultOpen>
                                     <SidebarMenuItem>
                                         <CollapsibleTrigger>
-                                            <SidebarMenuButton
-                                                tooltip={group.title}
-                                                className="w-full hover:bg-gray-300"
-                                            >
+                                            <SidebarMenuButton className="w-full hover:bg-gray-300">
                                                 <Folder />
                                                 <span>{group.title}</span>
                                             </SidebarMenuButton>
