@@ -1,4 +1,4 @@
-import { Folder, Plus, User2 } from "lucide-react";
+import { Folder, Plus } from "lucide-react";
 import {
     Collapsible,
     CollapsibleContent,
