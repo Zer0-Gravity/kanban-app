@@ -1,12 +1,21 @@
-import { FilterIcon, MoreHorizontal, Plus, SortAsc } from "lucide-react";
+import {
+    FilterIcon,
+    MoreHorizontal,
+    Plus,
+    Search,
+    SortAsc,
+} from "lucide-react";
 import { Outlet } from "react-router";
 import { useModal } from "../../../store";
+import Topbar from "../utilityComponent/Topbar";
 
 function ProjectPage() {
     const { openModal } = useModal();
 
     return (
         <main className="relative">
+            <Topbar />
+
             <header>
                 <h1>Title Project</h1>
                 <p>date created</p>

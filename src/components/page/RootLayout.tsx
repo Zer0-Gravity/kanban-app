@@ -6,9 +6,8 @@ function RootLayout() {
     return (
         <SidebarProvider>
             <AppSidebar />
-            <main className="">
-                <SidebarTrigger className="mb-4" />
-
+            <main className="relative">
+                <SidebarTrigger className="mb-4 absolute top-5 left-2 z-10" />
                 <Outlet />
             </main>
         </SidebarProvider>
