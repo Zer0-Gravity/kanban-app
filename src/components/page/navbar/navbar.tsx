@@ -1,113 +1,77 @@
-import { Folder, Plus } from "lucide-react";
-import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
-} from "../../ui/collapsible";
+import { Folder, Plus, Settings, Tag } from "lucide-react";
+import { Collapsible, CollapsibleContent } from "../../ui/collapsible";
 import {
     Sidebar,
     SidebarContent,
-    SidebarFooter,
     SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuAction,
-    SidebarMenuButton,
     SidebarMenuItem,
     SidebarMenuSub,
     SidebarMenuSubButton,
     SidebarMenuSubItem,
     SidebarRail,
 } from "../../ui/sidebar";
+
+import ParentButton from "./ParentButton";
+import ChildContent from "./ChildContent";
 import { useModal } from "../../../store";
+import SIdebarLogoHeader from "./SIdebarHeader";
+import Footer from "./Footer";
 
 function AppSidebar() {
-    const { openModal, modalName } = useModal();
-
-    const navItems = [
-        {
-            title: "Homework",
-            items: [
-                { title: "Math", url: "/homework/math" },
-                { title: "English", url: "/homework/english" },
-                { title: "Science", url: "/homework/science" },
-            ],
-        },
-        {
-            title: "Homework",
-            items: [
-                { title: "Math", url: "/homework/math" },
-                { title: "English", url: "/homework/english" },
-                { title: "Science", url: "/homework/science" },
-            ],
-        },
-    ];
+    const { openModal } = useModal();
 
     return (
-        <Sidebar>
+        <Sidebar collapsible="icon">
             <SidebarHeader>
-                <SidebarMenu className="border border-[#222222] p-3 rounded-sm">
-                    Kanban App
-                </SidebarMenu>
+                <SIdebarLogoHeader />
             </SidebarHeader>
 
             <SidebarContent>
-                <SidebarGroup>
-                    <SidebarGroupLabel className="bg-amber-200 text-sm">
-                        My Project
-                    </SidebarGroupLabel>
-                    <SidebarMenuAction
-                        onClick={() => {
-                            openModal("new-project");
-                            console.log(modalName);
-                        }}
-                    >
-                        <Plus />
-                    </SidebarMenuAction>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {navItems.map((group, index) => (
-                                <Collapsible key={index} defaultOpen>
-                                    <SidebarMenuItem>
-                                        <CollapsibleTrigger>
-                                            <SidebarMenuButton className="w-full hover:bg-gray-300">
-                                                <Folder />
-                                                <span>{group.title}</span>
-                                            </SidebarMenuButton>
-                                        </CollapsibleTrigger>
+                {/* Project Content */}
+                <Collapsible defaultOpen>
+                    <SidebarGroup>
+                        <ParentButton icon={Folder} label="My Projects">
+                            <SidebarMenuAction
+                                onClick={() => openModal("new-project")}
+                            >
+                                <Plus />
+                            </SidebarMenuAction>
+                        </ParentButton>
 
-                                        <CollapsibleContent>
-                                            <SidebarMenuSub>
-                                                {group.items.map(
-                                                    (item, index) => (
-                                                        <SidebarMenuSubItem
-                                                            key={index}
-                                                        >
-                                                            <SidebarMenuSubButton className="hover:bg-amber-200 select-none">
-                                                                {item.title}
-                                                            </SidebarMenuSubButton>
-                                                        </SidebarMenuSubItem>
-                                                    ),
-                                                )}
-                                            </SidebarMenuSub>
-                                        </CollapsibleContent>
-                                    </SidebarMenuItem>
-                                </Collapsible>
-                            ))}
+                        {/* My Projects children */}
+                        <ChildContent />
+                    </SidebarGroup>
+                </Collapsible>
+
+                {/* Additional Setting */}
+                <Collapsible>
+                    <SidebarGroup className="pt-0">
+                        <SidebarMenu>
+                            <SidebarMenuItem className="relative">
+                                <ParentButton
+                                    icon={Settings}
+                                    label="Additional Setting"
+                                />
+                                <CollapsibleContent>
+                                    <SidebarMenuSub>
+                                        <SidebarMenuSubItem>
+                                            <SidebarMenuSubButton>
+                                                <Tag size={20} />
+                                                <span>Manage Tags</span>
+                                            </SidebarMenuSubButton>
+                                        </SidebarMenuSubItem>
+                                    </SidebarMenuSub>
+                                </CollapsibleContent>
+                            </SidebarMenuItem>
                         </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
+                    </SidebarGroup>
+                </Collapsible>
             </SidebarContent>
 
-            <SidebarFooter className="bg-amber-100 p-3">
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <button>Change Theme</button>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarFooter>
+            <Footer />
             <SidebarRail />
         </Sidebar>
     );
