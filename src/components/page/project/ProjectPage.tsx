@@ -1,10 +1,4 @@
-import {
-    FilterIcon,
-    MoreHorizontal,
-    Plus,
-    Search,
-    SortAsc,
-} from "lucide-react";
+import { FilterIcon, MoreHorizontal, Plus, SortAsc } from "lucide-react";
 import { Outlet } from "react-router";
 import { useModal } from "../../../store";
 import Topbar from "../utilityComponent/Topbar";
