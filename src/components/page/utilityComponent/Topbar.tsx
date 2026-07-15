@@ -1,17 +1,23 @@
-import { Search } from "lucide-react";
+import { File, Search } from "lucide-react";
+import Button from "./Button";
 
 function Topbar() {
     return (
-        <div className="flex justify-around h-10 w-full bg-red-50">
-            <div>
-                <input type="text" />
-                <button>
-                    <Search />
+        <div className="flex justify-around w-full p-2">
+            <div className="flex">
+                <input
+                    type="text"
+                    className="border h-10 rounded-full rounded-r-none p-4 w-100 outline-none"
+                    placeholder="Search project..."
+                />
+                <button className="h-10 border w-15 flex items-center justify-center rounded-r-full border-l-0 bg-button ]">
+                    <Search color="white" />
                 </button>
             </div>
             <div>
-                <button>New Badge</button>
-                <button>New Project</button>
+                <Button icon={File} customClass="bg-button text-white">
+                    New Project
+                </Button>
             </div>
         </div>
     );

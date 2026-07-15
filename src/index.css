@@ -8,10 +8,11 @@
 
 @theme {
     --color-button: #009cff;
+    --color-muted: #5d5d5d;
 }
 
 .logo-image {
-    font-family: "Inter", sans-serif;
+    font-family: "Inter", sans-serif !important;
     font-size: 80px;
     font-weight: 900;
     letter-spacing: 0.03em;
@@ -24,6 +25,10 @@
 
 p {
     font-family: "Inter", sans-serif;
+}
+
+h1 {
+    font-family: "Roboto", sans-serif;
 }
 
 span {

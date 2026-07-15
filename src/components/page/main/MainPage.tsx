@@ -6,7 +6,7 @@ function MainPage() {
     const { openModal } = useModal();
 
     return (
-        <main className="w-full md:w-166.25 space-y-5">
+        <main className="w-full md:w-166.25 space-y-5 p-3">
             <div className="flex items-center">
                 <img
                     src="/logo-kanban.svg"
