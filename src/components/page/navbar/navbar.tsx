@@ -1,4 +1,4 @@
-import { Folder, Plus, Settings, Tag } from "lucide-react";
+import { Folder, Home, Plus, Settings, Tag } from "lucide-react";
 import { Collapsible, CollapsibleContent } from "../../ui/collapsible";
 import {
     Sidebar,
@@ -7,6 +7,7 @@ import {
     SidebarHeader,
     SidebarMenu,
     SidebarMenuAction,
+    SidebarMenuButton,
     SidebarMenuItem,
     SidebarMenuSub,
     SidebarMenuSubButton,
@@ -19,6 +20,7 @@ import ChildContent from "./ChildContent";
 import { useModal } from "../../../store";
 import SIdebarLogoHeader from "./SIdebarHeader";
 import Footer from "./Footer";
+import { NavLink } from "react-router";
 
 function AppSidebar() {
     const { openModal } = useModal();
@@ -30,6 +32,21 @@ function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
+                {/* Home button */}
+                <SidebarGroup>
+                    <SidebarMenu>
+                        <SidebarMenuButton>
+                            <NavLink
+                                to={"/"}
+                                className="flex gap-2 text-[16px]"
+                            >
+                                <Home size={20} />
+                                <span>Home</span>
+                            </NavLink>
+                        </SidebarMenuButton>
+                    </SidebarMenu>
+                </SidebarGroup>
+
                 {/* Project Content */}
                 <Collapsible defaultOpen>
                     <SidebarGroup>

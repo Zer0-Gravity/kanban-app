@@ -17,7 +17,7 @@ export default function Button({
     return (
         <button
             onClick={onClick}
-            className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg ${customClass}`}
+            className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg ${customClass} active:scale-95 transition-all`}
         >
             <Icon size={20} />
             <span className="font-semibold!">{children}</span>
