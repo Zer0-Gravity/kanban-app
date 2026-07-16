@@ -1,6 +1,7 @@
 import { useModal } from "../../../store";
 import NewBoard from "./submodal/NewBoard";
 import NewCard from "./submodal/NewCard";
+import NewCollections from "./submodal/NewCollections";
 import NewProject from "./submodal/NewProject";
 import NewTask from "./submodal/NewTask";
 
@@ -13,6 +14,7 @@ function MainModal() {
             {modalName === "new-card" && <NewCard />}
             {modalName === "new-board" && <NewBoard />}
             {modalName === "new-task" && <NewTask />}
+            {modalName === "new-collections" && <NewCollections />}
         </main>
     );
 }

@@ -52,7 +52,7 @@ function AppSidebar() {
                     <SidebarGroup>
                         <ParentButton icon={Folder} label="My Projects">
                             <SidebarMenuAction
-                                onClick={() => openModal("new-project")}
+                                onClick={() => openModal("new-collections")}
                             >
                                 <Plus />
                             </SidebarMenuAction>

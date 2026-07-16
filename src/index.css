@@ -8,7 +8,8 @@
 
 @theme {
     --color-button: #009cff;
-    --color-muted: #5d5d5d;
+    --color-foreground-muted-primary: #5d5d5d;
+    --color-foreground-muted-secondary: #ededed;
 }
 
 .logo-image {

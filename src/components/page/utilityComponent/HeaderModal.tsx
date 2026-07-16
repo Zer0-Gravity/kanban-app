@@ -4,8 +4,8 @@ import { useModal } from "../../../store";
 function HeaderModal({ title }: { title: string }) {
     const { closeModal } = useModal();
     return (
-        <header>
-            <h1>{title}</h1>
+        <header className="flex justify-between mb-8">
+            <h1 className="text-xl font-medium">{title}</h1>
             <button onClick={closeModal}>
                 <X />
             </button>
