@@ -1,43 +1,35 @@
-import { X } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { useModal } from "../../../../store";
+import { FormProvider, useForm } from "react-hook-form";
+import ModalContainer from "../../utilityComponent/ModalContainer";
+import HeaderModal from "../../utilityComponent/HeaderModal";
+import CustomInputField from "../../utilityComponent/CustomInputField";
+import { File, Save } from "lucide-react";
+import Button from "../../utilityComponent/Button";
 
 function NewProject() {
-    const { closeModal } = useModal();
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm();
+    const method = useForm();
 
-    const handleNewProject = (e) => {
-        e.preventDefault();
+    const handleNewProject = (formData: FormData) => {
+        console.log(formData);
     };
 
     return (
-        <main className="bg-white">
-            <header>
-                <h1>Create Project</h1>
-                <button onClick={closeModal}>
-                    <X />
-                </button>
-            </header>
+        <ModalContainer>
+            <HeaderModal title="Create Project" />
 
-            <form onSubmit={handleSubmit(handleNewProject)}>
-                <div>
-                    <label htmlFor="title">Title</label>
-                    <input
-                        {...register("title", {
-                            required: "Project name is required",
-                        })}
+            <FormProvider {...method}>
+                <form onSubmit={method.handleSubmit(handleNewProject)}>
+                    <CustomInputField
+                        icon={File}
+                        name="title"
+                        label="Project Title"
+                        placeholder="Project title..."
                     />
-                    {errors.title && (
-                        <span>{errors.title.message as string}</span>
-                    )}
-                </div>
-                <button type="submit">Create</button>
-            </form>
-        </main>
+                    <Button icon={Save} type="submit">
+                        Save
+                    </Button>
+                </form>
+            </FormProvider>
+        </ModalContainer>
     );
 }
 
