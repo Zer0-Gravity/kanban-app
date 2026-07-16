@@ -1,23 +1,45 @@
-import { useState } from "react";
 import HeaderModal from "../../utilityComponent/HeaderModal";
+import { FormProvider, useForm } from "react-hook-form";
+import CustomInputField from "../../utilityComponent/CustomInputField";
+import { ClipboardCheck, Save } from "lucide-react";
+import Button from "../../utilityComponent/Button";
+import ModalContainer from "../../utilityComponent/ModalContainer";
 
 function NewTask() {
-    const [task, setTask] = useState<string>("");
+    const method = useForm();
 
-    const handleNewTask = () => {
-        console.log(task);
+    const handleNewTask = (formData: FormData) => {
+        console.log(formData);
     };
 
     return (
-        <main className="bg-white">
+        <ModalContainer>
             <HeaderModal title="New Task" />
 
-            <div>
-                <input value={task} onChange={(e) => setTask(e.target.value)} />
+            <FormProvider {...method}>
+                <form
+                    onSubmit={method.handleSubmit(handleNewTask)}
+                    className="space-y-3"
+                >
+                    <CustomInputField
+                        icon={ClipboardCheck}
+                        name="title"
+                        label="Task title"
+                        placeholder="Task title..."
+                    />
 
-                <button onClick={handleNewTask}>Create</button>
-            </div>
-        </main>
+                    <div className="flex justify-end">
+                        <Button
+                            icon={Save}
+                            customClass="bg-button text-white"
+                            type="submit"
+                        >
+                            Save
+                        </Button>
+                    </div>
+                </form>
+            </FormProvider>
+        </ModalContainer>
     );
 }
 
