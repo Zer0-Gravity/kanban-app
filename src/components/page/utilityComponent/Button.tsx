@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 interface ButtonType {
     icon: LucideIcon;
-    children: ReactNode;
+    children?: ReactNode;
     customClass?: string;
     onClick?: () => void;
 }
