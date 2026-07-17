@@ -7,7 +7,7 @@ function ColorPicker() {
     const { control } = useFormContext();
 
     return (
-        <div>
+        <div className="space-y-3">
             <p className="font-semibold">Color</p>
 
             <Controller
