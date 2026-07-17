@@ -1,15 +1,20 @@
 import { Search } from "lucide-react";
 import { SidebarMenu, useSidebar } from "../../ui/sidebar";
+import { useNavigate } from "react-router";
 
 function SIdebarLogoHeader() {
     const { state } = useSidebar();
+    const navigate = useNavigate();
 
     const isCollapse = state === "collapsed";
 
     return (
         <SidebarMenu>
             {/* Logo Section */}
-            <div className="flex gap-2 items-center">
+            <div
+                className="flex gap-2 items-center"
+                onClick={() => navigate("/")}
+            >
                 <img src="/logo-kanban.svg" alt="logo" className="h-12.5" />
                 {!isCollapse && (
                     <h1 className="text-[30px] font-extrabold">

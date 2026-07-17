@@ -1,7 +1,10 @@
 import { File, Search } from "lucide-react";
 import Button from "./Button";
+import { useModal } from "../../../store";
 
 function Topbar() {
+    const { openModal } = useModal();
+
     return (
         <div className="flex justify-around w-full p-2">
             <div className="flex">
@@ -14,11 +17,14 @@ function Topbar() {
                     <Search color="white" />
                 </button>
             </div>
-            <div>
-                <Button icon={File} customClass="bg-button text-white">
-                    New Project
-                </Button>
-            </div>
+
+            <Button
+                icon={File}
+                customClass="bg-button text-white"
+                onClick={() => openModal("new-project")}
+            >
+                New Project
+            </Button>
         </div>
     );
 }

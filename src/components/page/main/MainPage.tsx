@@ -31,7 +31,11 @@ function MainPage() {
                 >
                     New Project
                 </Button>
-                <Button icon={Folder} customClass="bg-button text-white">
+                <Button
+                    icon={Folder}
+                    customClass="bg-button text-white"
+                    onClick={() => openModal("new-collections")}
+                >
                     New Collections
                 </Button>
             </div>
