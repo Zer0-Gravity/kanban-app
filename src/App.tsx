@@ -5,6 +5,7 @@ import ProjectPage from "./components/page/project/ProjectPage";
 import DetailProject from "./components/page/project/DetailProject";
 import { useModal } from "./store";
 import MainModal from "./components/page/modal/MainModal";
+import ManageTag from "./components/page/additionalSetting/ManageTag";
 
 function App() {
     const { modalName } = useModal();
@@ -18,6 +19,7 @@ function App() {
                         <Route path="/project" element={<ProjectPage />}>
                             <Route path="detail" element={<DetailProject />} />
                         </Route>
+                        <Route path="manage-tag" element={<ManageTag />} />
                     </Route>
                 </Routes>
             </main>
