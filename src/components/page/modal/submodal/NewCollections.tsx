@@ -6,13 +6,29 @@ import ModalContainer from "../../utilityComponent/ModalContainer";
 import { FormProvider, useForm } from "react-hook-form";
 import CustomInputField from "../../utilityComponent/CustomInputField";
 import ColorPicker from "../../utilityComponent/ColorPicker";
+import { db } from "../../../../db";
+import type { Collections } from "../../../../type";
+import { useModal } from "../../../../store";
 
 function NewCollections() {
     const method = useForm();
+    const { closeModal } = useModal();
 
-    const handleNewCollections = (formData: FormData) => {
-        console.log(formData);
-    };
+    async function handleNewCollections(data: Collections) {
+        try {
+            //Add data to the collections table
+            await db.collections.add({
+                id: crypto.randomUUID(),
+                collectionName: data.collectionName,
+                collectionsTheme: data.collectionsTheme,
+                createdAt: new Date().toLocaleDateString(),
+            });
+
+            closeModal();
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <ModalContainer>
@@ -31,7 +47,7 @@ function NewCollections() {
                     />
 
                     {/* Color input */}
-                    <ColorPicker />
+                    <ColorPicker theme="collectionsTheme" />
 
                     <div className="flex justify-end">
                         <Button

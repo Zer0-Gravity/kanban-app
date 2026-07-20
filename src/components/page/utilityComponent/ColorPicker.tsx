@@ -3,7 +3,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { Palette } from "lucide-react";
 import { Controller, useFormContext } from "react-hook-form";
 
-function ColorPicker() {
+function ColorPicker({ theme }: { theme?: string }) {
     const { control } = useFormContext();
 
     return (
@@ -11,7 +11,7 @@ function ColorPicker() {
             <p className="font-semibold">Color</p>
 
             <Controller
-                name="theme"
+                name={theme}
                 control={control}
                 render={({ field }) => (
                     <div className="relative text-foreground-muted-primary">
