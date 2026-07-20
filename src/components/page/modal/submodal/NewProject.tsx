@@ -17,9 +17,11 @@ import {
     SelectValue,
 } from "../../../ui/select";
 import { useEffect, useState } from "react";
+import { useModal } from "../../../../store";
 
 function NewProject() {
     const method = useForm();
+    const { closeModal } = useModal();
     const [select, setSelect] = useState([]);
 
     useEffect(() => {
@@ -43,7 +45,21 @@ function NewProject() {
         fetchData();
     }, []);
 
-    async function handleNewProject(data: Projects) {}
+    async function handleNewProject(data: Projects) {
+        try {
+            await db.projects.add({
+                id: crypto.randomUUID(),
+                collectionsId: data.collectionsId,
+                projectName: data.projectName,
+                description: data.description,
+                createdAt: new Date().toISOString(),
+            });
+
+            closeModal();
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <ModalContainer>
@@ -69,7 +85,7 @@ function NewProject() {
                     />
 
                     <Controller
-                        name="collectionsParent"
+                        name="collectionsId"
                         control={method.control}
                         rules={{
                             required: "Collections parent can't be empty",
