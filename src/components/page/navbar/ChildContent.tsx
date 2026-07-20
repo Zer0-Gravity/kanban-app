@@ -12,47 +12,53 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
 } from "../../ui/sidebar";
+import { db } from "../../../db";
+import { useLiveQuery } from "dexie-react-hooks";
 
 function ChildContent() {
-    const navItems = [
-        {
-            title: "Homework",
-            items: [
-                { title: "Math", url: "/homework/math" },
-                { title: "English", url: "/homework/english" },
-                { title: "Science", url: "/homework/science" },
-            ],
-        },
-        {
-            title: "Homework",
-            items: [
-                { title: "Math", url: "/homework/math" },
-                { title: "English", url: "/homework/english" },
-                { title: "Science", url: "/homework/science" },
-            ],
-        },
-    ];
+    const collectionsTree = useLiveQuery(async () => {
+        const parentFolder = await db.collections.toArray();
+
+        //Get the child content from the parent folder
+        const childContentPromise = parentFolder.map(async (folder) => {
+            const content = await db.projects
+                .where("collectionsId") //get the collectionsId
+                .equals(folder.id) // and then compare it with the id on the collection database
+                .toArray();
+
+            //Combine all data into one structure
+            return {
+                ...folder,
+                project: content,
+            };
+        });
+
+        //return the data using promise.all
+        return Promise.all(childContentPromise);
+    });
 
     return (
         <CollapsibleContent>
             <SidebarGroupContent>
                 <SidebarMenuSub>
-                    {navItems.map((group, index) => (
-                        <Collapsible key={index} defaultOpen={index === 0}>
+                    {collectionsTree.map((col) => (
+                        <Collapsible key={col.id}>
                             <SidebarMenuItem>
                                 <CollapsibleTrigger>
                                     <SidebarMenuButton className="w-full hover:bg-gray-300">
                                         <Folder size={20} />
-                                        <span>{group.title}</span>
+                                        <span>{col.collectionName}</span>
                                     </SidebarMenuButton>
                                 </CollapsibleTrigger>
 
                                 <CollapsibleContent>
                                     <SidebarMenuSub>
-                                        {group.items.map((item, index) => (
-                                            <SidebarMenuSubItem key={index}>
+                                        {col.project.map((project) => (
+                                            <SidebarMenuSubItem
+                                                key={project.id}
+                                            >
                                                 <SidebarMenuSubButton className="hover:bg-amber-200 select-none">
-                                                    {item.title}
+                                                    {project.projectName}
                                                 </SidebarMenuSubButton>
                                             </SidebarMenuSubItem>
                                         ))}

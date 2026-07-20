@@ -72,7 +72,7 @@ function NewProject() {
                 >
                     <CustomInputField
                         icon={File}
-                        name="title"
+                        name="projectName"
                         label="Project Title"
                         placeholder="Project title..."
                     />
