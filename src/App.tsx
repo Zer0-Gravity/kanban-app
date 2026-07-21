@@ -16,7 +16,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<RootLayout />}>
                         <Route index element={<MainPage />} />
-                        <Route path="/project" element={<ProjectPage />}>
+                        <Route path="/project/:id" element={<ProjectPage />}>
                             <Route path="detail" element={<DetailProject />} />
                         </Route>
                         <Route path="manage-tag" element={<ManageTag />} />

@@ -15,6 +15,7 @@ import {
 import { db } from "../../../db";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useModal } from "../../../store";
+import { Link } from "react-router";
 
 function ChildContent() {
     const { openModal } = useModal();
@@ -67,9 +68,13 @@ function ChildContent() {
                                                         key={project.id}
                                                     >
                                                         <SidebarMenuSubButton className="hover:bg-amber-200 select-none">
-                                                            {
-                                                                project.projectName
-                                                            }
+                                                            <Link
+                                                                to={`project/${project.id}`}
+                                                            >
+                                                                {
+                                                                    project.projectName
+                                                                }
+                                                            </Link>
                                                         </SidebarMenuSubButton>
                                                     </SidebarMenuSubItem>
                                                 ))
