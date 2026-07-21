@@ -3,10 +3,16 @@ import { useModal } from "../../../store";
 import Button from "../utilityComponent/Button";
 import { Checkbox } from "../../ui/checkbox";
 import { useNavigate } from "react-router";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "../../../db";
 
 function DetailProject() {
     const { openModal } = useModal();
     const navigate = useNavigate();
+
+    const taskList = useLiveQuery(() => db.task.toArray());
+
+    if (!taskList) return;
 
     return (
         <aside className="absolute right-0 top-0 max-w-150 rounded-l-xl p-5 bg-gray-200 h-screen space-y-4">
@@ -59,21 +65,26 @@ function DetailProject() {
             <div className="space-y-4">
                 <div className="flex justify-between items-end">
                     <h1 className="font-bold">Current Task</h1>
-                    <Button
-                        icon={Plus}
-                        onClick={() => openModal("new-task")}
-                        customClass="border"
-                    >
+                    <Button icon={Plus} onClick={() => openModal("new-task")}>
                         Task
                     </Button>
                 </div>
                 <div className="h-75 rounded-lg bg-gray-300 p-3 flex-col flex gap-2">
-                    <label className="bg-white h-12 p-2 flex items-center gap-3 rounded-lg has-checked:opacity-70 hover:scale-102 transition-all">
-                        <Checkbox className="peer rounded-full border-2 border-button data-checked:bg-button size-5 text-white" />
-                        <span className="font-medium select-none peer-data-checked:line-through">
-                            Todays todo is breathing
-                        </span>
-                    </label>
+                    {taskList.length !== 0 ? (
+                        taskList.map((task) => (
+                            <label className="bg-white h-12 p-2 flex items-center gap-3 rounded-lg has-checked:opacity-70 hover:scale-102 transition-all">
+                                <Checkbox className="peer rounded-full border-2 border-button data-checked:bg-button size-5 text-white" />
+                                <span className="font-medium select-none peer-data-checked:line-through">
+                                    {task.taskName}
+                                </span>
+                            </label>
+                        ))
+                    ) : (
+                        <div className="w-full text-center p-4 font-semibold text-sm">
+                            No task currently listed, start creating new task
+                            and track your progress!!
+                        </div>
+                    )}
                 </div>
             </div>
 

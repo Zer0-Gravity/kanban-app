@@ -4,13 +4,27 @@ import CustomInputField from "../../utilityComponent/CustomInputField";
 import { ClipboardCheck, Save } from "lucide-react";
 import Button from "../../utilityComponent/Button";
 import ModalContainer from "../../utilityComponent/ModalContainer";
+import type { Task } from "../../../../type";
+import { db } from "../../../../db";
+import { useModal } from "../../../../store";
 
 function NewTask() {
     const method = useForm();
+    const { closeModal } = useModal();
 
-    const handleNewTask = (formData: FormData) => {
-        console.log(formData);
-    };
+    async function handleNewTask(data: Task) {
+        try {
+            await db.task.add({
+                id: crypto.randomUUID(),
+                taskName: data.taskName,
+                cardId: "hello-world",
+            });
+
+            closeModal();
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <ModalContainer>
@@ -23,7 +37,7 @@ function NewTask() {
                 >
                     <CustomInputField
                         icon={ClipboardCheck}
-                        name="title"
+                        name="taskName"
                         label="Task title"
                         placeholder="Task title..."
                     />
