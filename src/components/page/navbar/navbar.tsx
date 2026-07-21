@@ -20,7 +20,7 @@ import ChildContent from "./ChildContent";
 import { useModal } from "../../../store";
 import SIdebarLogoHeader from "./SIdebarHeader";
 import Footer from "./Footer";
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 
 function AppSidebar() {
     const { openModal } = useModal();
@@ -76,8 +76,13 @@ function AppSidebar() {
                                     <SidebarMenuSub>
                                         <SidebarMenuSubItem>
                                             <SidebarMenuSubButton>
-                                                <Tag size={20} />
-                                                <span>Manage Tags</span>
+                                                <Link
+                                                    to={"/manage-tag"}
+                                                    className="flex gap-2"
+                                                >
+                                                    <Tag size={20} />
+                                                    <span>Manage Tags</span>
+                                                </Link>
                                             </SidebarMenuSubButton>
                                         </SidebarMenuSubItem>
                                     </SidebarMenuSub>
