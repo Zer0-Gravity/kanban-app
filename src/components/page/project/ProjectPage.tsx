@@ -5,7 +5,7 @@ import Button from "../utilityComponent/Button";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
 import { format, formatDistanceToNow } from "date-fns";
-import ColumnComponent from "./ColumnComponent";
+import KanbanColumn from "./Kanban/KanbanColumn";
 
 function ProjectPage() {
     const { openModal } = useModal();
@@ -77,7 +77,7 @@ function ProjectPage() {
             {/* Column container */}
             <div className="flex-1 min-h-0">
                 <div className="flex items-start gap-4 overflow-auto py-3 h-full scrollbar-custom">
-                    <ColumnComponent />
+                    <KanbanColumn />
 
                     <button
                         onClick={() => openModal("new-board", id)}
