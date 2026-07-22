@@ -38,7 +38,7 @@ span {
 
 .scrollbar-custom::-webkit-scrollbar {
     width: 5px;
-    height: 2px;
+    height: 5px;
     background-color: white;
     border-radius: 10px;
 }

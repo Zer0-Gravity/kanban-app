@@ -1,19 +1,11 @@
-import {
-    CreditCard,
-    Dot,
-    FilterIcon,
-    Flag,
-    MoreHorizontal,
-    Plus,
-    SortAsc,
-} from "lucide-react";
+import { CreditCard, FilterIcon, Plus, Search, SortAsc } from "lucide-react";
 import { Outlet, useParams } from "react-router";
 import { useModal } from "../../../store";
-import Topbar from "../utilityComponent/Topbar";
 import Button from "../utilityComponent/Button";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
 import { format, formatDistanceToNow } from "date-fns";
+import ColumnComponent from "./ColumnComponent";
 
 function ProjectPage() {
     const { openModal } = useModal();
@@ -26,18 +18,35 @@ function ProjectPage() {
     }
 
     return (
-        <main className="relative h-full w-full px-5 pb-5 space-y-3">
-            <Topbar />
+        <main className="relative flex flex-col h-screen w-full px-5 pb-5 space-y-3 overflow-hidden">
+            <header className="mt-8 flex justify-between">
+                <div>
+                    <h1 className="text-[50px] font-bold">
+                        {projectData.projectName}
+                    </h1>
+                    <p className="text-sm italic text-muted">
+                        {`Created ${formatDistanceToNow(projectData.createdAt)} ago / ${format(projectData.createdAt, "PPPP")}`}
+                    </p>
+                </div>
 
-            <header className="mt-8">
-                <h1 className="text-[50px] font-bold">
-                    {projectData.projectName}
-                </h1>
-                <p className="text-sm italic text-muted">
-                    {`Created ${formatDistanceToNow(projectData.createdAt)} ago / ${format(projectData.createdAt, "PPPP")}`}
-                </p>
+                {/* Search card section */}
+                <div className="text-foreground-muted-primary flex items-center">
+                    <input
+                        type="text"
+                        className="bg-foreground-muted-secondary p-2 w-70 rounded-lg border-none"
+                        placeholder="Search card..."
+                    />
+                    <Button
+                        icon={Plus}
+                        customClass="text-sm! text-button"
+                        onClick={() => openModal("new-project")}
+                    >
+                        New Project
+                    </Button>
+                </div>
             </header>
-            <div className="flex justify-between items-end">
+
+            <section className="flex justify-between items-end">
                 <div className="space-y-2">
                     <p className="text-xs italic font-semibold">Description</p>
                     <p className="max-w-200 text-sm  rounded-md text-muted italic border h-full w-full p-3">
@@ -63,68 +72,20 @@ function ProjectPage() {
                         New Card
                     </Button>
                 </div>
-            </div>
+            </section>
 
-            <div className="flex items-start gap-4">
-                <div className="bg-gray-200 w-87.5 h-fit p-3 rounded-xl">
-                    <div className="flex justify-between mb-3">
-                        <div className="flex items-center gap-3">
-                            <p className="h-2 w-2 bg-amber-400 rounded-full"></p>
-                            <p className="font-semibold">To Do</p>
-                            <p className="text-muted font-bold">3</p>
-                        </div>
-                        <button>
-                            <MoreHorizontal />
-                        </button>
-                    </div>
+            {/* Column container */}
+            <div className="flex-1 min-h-0">
+                <div className="flex items-start gap-4 overflow-auto py-3 h-full scrollbar-custom">
+                    <ColumnComponent />
 
-                    <div>
-                        <div className="rounded-lg p-3 space-y-3 bg-white">
-                            <div className="flex justify-between">
-                                <div className="flex gap-3">
-                                    <p className="py-1 px-2 text-sm rounded-lg bg-blue-600/20 text-blue-600 font-semibold">
-                                        Database
-                                    </p>
-                                    <p className="py-1 px-2 text-sm rounded-lg bg-red-600/20 text-red-600 font-semibold flex">
-                                        <Dot size={20} />
-                                        <span>High</span>
-                                    </p>
-                                </div>
-                                <MoreHorizontal />
-                            </div>
-                            <p className="text-[20px] font-semibold mt-3">
-                                Card title
-                            </p>
-                            <p className="truncate text-sm">
-                                Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Ex placeat, dignissimos beatae
-                                autem asperiores eligendi facere laudantium enim
-                                ipsa, non consequuntur aspernatur earum odit
-                                iusto, fugiat vel eaque. Illo, ab!
-                            </p>
-                            <div className="h-2 w-full bg-gray-300 rounded-full">
-                                <div className="h-2 bg-blue-600 w-[20%] rounded-full"></div>
-                            </div>
-                            <p className="flex justify-end text-sm">
-                                Progress 4/7
-                            </p>
-                            <div className="flex justify-between text-sm">
-                                <div className="flex gap-2 items-center text-red-600">
-                                    <Flag size={18} />
-                                    <p>12 June 2026</p>
-                                </div>
-                                <p>22 Days remaining</p>
-                            </div>
-                        </div>
-                    </div>
+                    <button
+                        onClick={() => openModal("new-board", id)}
+                        className="bg-gray-200 p-2 rounded-lg"
+                    >
+                        <Plus />
+                    </button>
                 </div>
-
-                <button
-                    onClick={() => openModal("new-board", id)}
-                    className="bg-gray-200 p-2 rounded-lg"
-                >
-                    <Plus />
-                </button>
             </div>
 
             <Outlet />
