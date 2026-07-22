@@ -28,6 +28,7 @@ export interface Card {
     deadlineDate: string;
     description: string;
     priority: Priority;
+    tagId: string;
 }
 
 export interface Task {

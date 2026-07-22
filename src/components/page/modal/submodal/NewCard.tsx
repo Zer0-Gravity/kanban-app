@@ -31,6 +31,7 @@ import { useModal } from "../../../../store";
 import { useEffect, useState } from "react";
 import SelectField from "../../utilityComponent/SelectField";
 import { useNavigate } from "react-router";
+import type { Card } from "../../../../type";
 
 function NewCard() {
     const method = useForm();
@@ -63,9 +64,21 @@ function NewCard() {
 
     if (!columns) return;
 
-    const handleNewCard = (formData: FormData) => {
-        console.log(formData);
-    };
+    async function handleNewCard(data: Card) {
+        try {
+            await db.cards.add({
+                id: crypto.randomUUID(),
+                columnId: idContainer,
+                cardName: data.cardName,
+                description: data.description,
+                deadlineDate: data.deadlineDate,
+                priority: data.priority,
+                tagId: data.tagId,
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <ModalContainer>
@@ -94,7 +107,7 @@ function NewCard() {
 
                     {/* Deadline */}
                     <Controller
-                        name="deadline"
+                        name="deadlineDate"
                         control={method.control}
                         render={({ field }) => (
                             <Popover>
