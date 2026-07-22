@@ -4,10 +4,11 @@ import ModalContainer from "../../utilityComponent/ModalContainer";
 import CustomInputField from "../../utilityComponent/CustomInputField";
 import {
     Calendar1,
+    Columns,
     CreditCard,
     PackageOpen,
-    Plus,
     Save,
+    Tag,
     TagsIcon,
     TextInitial,
 } from "lucide-react";
@@ -25,10 +26,42 @@ import CustomTextArea from "../../utilityComponent/CustomTextArea";
 import { Popover, PopoverContent, PopoverTrigger } from "../../../ui/popover";
 import { Calendar } from "../../../ui/calendar";
 import { format } from "date-fns";
+import { db } from "../../../../db";
+import { useModal } from "../../../../store";
+import { useEffect, useState } from "react";
+import SelectField from "../../utilityComponent/SelectField";
+import { useNavigate } from "react-router";
 
 function NewCard() {
     const method = useForm();
     const tag = ["Database", "UI/UX", "API", "Route"];
+    const { idContainer } = useModal();
+    const { closeModal } = useModal();
+    const navigate = useNavigate();
+    const [columns, setColumns] = useState([]);
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const data = await db.columns
+                    .where("projectId")
+                    .equals(idContainer)
+                    .toArray();
+
+                const mappedCol = data.map((items) => ({
+                    value: items.id,
+                    label: items.columnName,
+                }));
+
+                setColumns(mappedCol);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchData();
+    }, [idContainer]);
+
+    if (!columns) return;
 
     const handleNewCard = (formData: FormData) => {
         console.log(formData);
@@ -130,10 +163,14 @@ function NewCard() {
                                                     </span>
                                                 </div>
                                                 <Button
-                                                    icon={Plus}
+                                                    icon={Tag}
                                                     customClass="text-button"
+                                                    onClick={() => {
+                                                        navigate("manage-tag");
+                                                        closeModal();
+                                                    }}
                                                 >
-                                                    Create Tag?
+                                                    Manage tag
                                                 </Button>
                                             </div>
                                         </ComboboxEmpty>
@@ -153,6 +190,14 @@ function NewCard() {
                             </div>
                         )}
                     />
+
+                    <SelectField
+                        icon={Columns}
+                        idName="columnId"
+                        items={columns}
+                    >
+                        Select column
+                    </SelectField>
 
                     <div className="flex justify-end">
                         <Button

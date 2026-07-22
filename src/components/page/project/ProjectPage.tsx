@@ -1,4 +1,4 @@
-import { CreditCard, FilterIcon, Plus, Search, SortAsc } from "lucide-react";
+import { CreditCard, FilterIcon, Plus, SortAsc } from "lucide-react";
 import { Outlet, useParams } from "react-router";
 import { useModal } from "../../../store";
 import Button from "../utilityComponent/Button";
@@ -67,7 +67,7 @@ function ProjectPage() {
                     <Button
                         icon={CreditCard}
                         customClass="bg-button text-white"
-                        onClick={() => openModal("new-card")}
+                        onClick={() => openModal("new-card", id)}
                     >
                         New Card
                     </Button>
