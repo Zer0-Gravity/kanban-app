@@ -7,13 +7,14 @@ import {
     Plus,
     SortAsc,
 } from "lucide-react";
-import { Outlet } from "react-router";
+import { Outlet, useParams } from "react-router";
 import { useModal } from "../../../store";
 import Topbar from "../utilityComponent/Topbar";
 import Button from "../utilityComponent/Button";
 
 function ProjectPage() {
     const { openModal } = useModal();
+    const { id } = useParams();
 
     return (
         <main className="relative h-full w-full px-5 pb-5 space-y-5">
@@ -105,7 +106,7 @@ function ProjectPage() {
                 </div>
 
                 <button
-                    onClick={() => openModal("new-board")}
+                    onClick={() => openModal("new-board", id)}
                     className="bg-gray-200 p-2 rounded-lg"
                 >
                     <Plus />
