@@ -5,6 +5,7 @@ import { Checkbox } from "../../ui/checkbox";
 import { useNavigate } from "react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
+import { useSortable } from "@dnd-kit/react/sortable";
 
 function DetailProject() {
     const { openModal } = useModal();
@@ -69,23 +70,24 @@ function DetailProject() {
                         Task
                     </Button>
                 </div>
-                <div className="h-75 rounded-lg bg-gray-300 p-3 flex-col flex gap-2">
-                    {taskList.length !== 0 ? (
-                        taskList.map((task) => (
-                            <label className="bg-white h-12 p-2 flex items-center gap-3 rounded-lg has-checked:opacity-70 hover:scale-102 transition-all">
-                                <Checkbox className="peer rounded-full border-2 border-button data-checked:bg-button size-5 text-white" />
-                                <span className="font-medium select-none peer-data-checked:line-through">
-                                    {task.taskName}
-                                </span>
-                            </label>
-                        ))
-                    ) : (
-                        <div className="w-full text-center p-4 font-semibold text-sm">
-                            No task currently listed, start creating new task
-                            and track your progress!!
-                        </div>
-                    )}
-                </div>
+                <p>
+                    <div className="h-75 rounded-lg bg-gray-300 p-3 flex-col flex gap-2">
+                        {taskList.length !== 0 ? (
+                            taskList.map((task, index) => (
+                                <SortableTask
+                                    id={task.id}
+                                    index={index}
+                                    name={task.taskName}
+                                />
+                            ))
+                        ) : (
+                            <div className="w-full text-center p-4 font-semibold text-sm">
+                                No task currently listed, start creating new
+                                task and track your progress!!
+                            </div>
+                        )}
+                    </div>
+                </p>
             </div>
 
             <div className="flex gap-3 justify-end">
@@ -101,6 +103,22 @@ function DetailProject() {
                 </Button>
             </div>
         </aside>
+    );
+}
+
+function SortableTask({ id, index, name }) {
+    const { ref } = useSortable({ id, index });
+
+    return (
+        <label
+            ref={ref}
+            className="bg-white h-12 p-2 flex items-center gap-3 rounded-lg has-checked:opacity-70 hover:scale-102 transition-all cursor-grab"
+        >
+            <Checkbox className="peer rounded-full border-2 border-button data-checked:bg-button size-5 text-white cursor-pointer" />
+            <span className="font-medium select-none peer-data-checked:line-through">
+                {name}
+            </span>
+        </label>
     );
 }
 
