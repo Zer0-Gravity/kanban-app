@@ -11,27 +11,41 @@ import { Outlet, useParams } from "react-router";
 import { useModal } from "../../../store";
 import Topbar from "../utilityComponent/Topbar";
 import Button from "../utilityComponent/Button";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "../../../db";
+import { format, formatDistanceToNow } from "date-fns";
 
 function ProjectPage() {
     const { openModal } = useModal();
     const { id } = useParams();
 
+    const projectData = useLiveQuery(() => db.projects.get(id));
+
+    if (!projectData) {
+        return;
+    }
+
     return (
-        <main className="relative h-full w-full px-5 pb-5 space-y-5">
+        <main className="relative h-full w-full px-5 pb-5 space-y-3">
             <Topbar />
 
             <header className="mt-8">
-                <h1 className="text-[50px] font-bold">Title Project</h1>
-                <p className="text-sm italic text-muted">Created 3 week ago</p>
+                <h1 className="text-[50px] font-bold">
+                    {projectData.projectName}
+                </h1>
+                <p className="text-sm italic text-muted">
+                    {`Created ${formatDistanceToNow(projectData.createdAt)} ago / ${format(projectData.createdAt, "PPPP")}`}
+                </p>
             </header>
             <div className="flex justify-between items-end">
-                <p className="max-w-200 text-sm  rounded-md text-muted italic">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Quaerat repudiandae animi rem numquam minima dicta
-                    inventore, unde autem ipsam, accusantium sint cumque labore
-                    magnam quae consectetur! Adipisci natus sapiente
-                    reprehenderit!
-                </p>
+                <div className="space-y-2">
+                    <p className="text-xs italic font-semibold">Description</p>
+                    <p className="max-w-200 text-sm  rounded-md text-muted italic border h-full w-full p-3">
+                        {projectData.description
+                            ? projectData.description
+                            : "No description"}
+                    </p>
+                </div>
 
                 {/* Navigation */}
                 <div className="flex gap-3 justify-end max-h-10">
