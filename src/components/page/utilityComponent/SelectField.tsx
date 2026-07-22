@@ -21,9 +21,20 @@ interface SelectType {
     icon: LucideIcon;
     idName: string;
     children: ReactNode;
+    label: string;
+    placeholder: string;
+    emptyState?: string;
 }
 
-function SelectField({ idName, items, icon: Icon, children }: SelectType) {
+function SelectField({
+    idName,
+    items,
+    icon: Icon,
+    children,
+    label,
+    placeholder,
+    emptyState,
+}: SelectType) {
     const { control } = useFormContext();
     return (
         <>
@@ -44,16 +55,14 @@ function SelectField({ idName, items, icon: Icon, children }: SelectType) {
                                 onValueChange={field.onChange}
                             >
                                 <SelectTrigger className="bg-foreground-muted-secondary pl-15 pr-5 w-full h-14! rounded-lg outline-none border-none focus-visible:ring-1">
-                                    <SelectValue placeholder="Choose collections parent..." />
+                                    <SelectValue placeholder={placeholder} />
                                 </SelectTrigger>
                                 <SelectContent
                                     className="bg-foreground-muted-secondary"
                                     alignOffset={10}
                                 >
                                     <SelectGroup>
-                                        <SelectLabel>
-                                            Collections list
-                                        </SelectLabel>
+                                        <SelectLabel>{label}</SelectLabel>
                                         {items.length !== 0 ? (
                                             items.map((col) => (
                                                 <SelectItem
@@ -67,10 +76,7 @@ function SelectField({ idName, items, icon: Icon, children }: SelectType) {
                                         ) : (
                                             <p className="text-sm flex items-center justify-center gap-2 p-4">
                                                 <PackageOpen size={20} />
-                                                <span>
-                                                    No column available in this
-                                                    project, lets create one!
-                                                </span>
+                                                <span>{emptyState}</span>
                                             </p>
                                         )}
                                     </SelectGroup>

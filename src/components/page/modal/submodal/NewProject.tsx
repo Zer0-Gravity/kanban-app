@@ -1,4 +1,4 @@
-import { Controller, FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import ModalContainer from "../../utilityComponent/ModalContainer";
 import HeaderModal from "../../utilityComponent/HeaderModal";
 import CustomInputField from "../../utilityComponent/CustomInputField";
@@ -7,17 +7,9 @@ import Button from "../../utilityComponent/Button";
 import type { Projects } from "../../../../type";
 import CustomTextArea from "../../utilityComponent/CustomTextArea";
 import { db } from "../../../../db";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "../../../ui/select";
 import { useEffect, useState } from "react";
 import { useModal } from "../../../../store";
+import SelectField from "../../utilityComponent/SelectField";
 
 function NewProject() {
     const method = useForm();
@@ -84,56 +76,16 @@ function NewProject() {
                         placeholder="Description..."
                     />
 
-                    <Controller
-                        name="collectionsId"
-                        control={method.control}
-                        rules={{
-                            required: "Collections parent can't be empty",
-                        }}
-                        render={({ field }) => (
-                            <div className="space-y-3">
-                                <p className="font-semibold">
-                                    Select Collections
-                                </p>
-
-                                <div className="relative text-foreground-muted-primary">
-                                    <Select
-                                        items={select}
-                                        value={field.value}
-                                        onValueChange={field.onChange}
-                                    >
-                                        <SelectTrigger className="bg-foreground-muted-secondary pl-15 pr-5 w-full h-14! rounded-lg outline-none border-none focus-visible:ring-1">
-                                            <SelectValue placeholder="Choose collections parent..." />
-                                        </SelectTrigger>
-                                        <SelectContent
-                                            className="bg-foreground-muted-secondary"
-                                            alignOffset={10}
-                                        >
-                                            <SelectGroup>
-                                                <SelectLabel>
-                                                    Collections list
-                                                </SelectLabel>
-                                                {select.map((col) => (
-                                                    <SelectItem
-                                                        key={col.label}
-                                                        value={col.value}
-                                                        className="data-selected:bg-button h-10 data-highlighted:bg-button data-highlighted:text-white"
-                                                    >
-                                                        {col.label}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-
-                                    <Folder
-                                        size={20}
-                                        className="absolute left-4 top-1/2 -translate-y-1/2"
-                                    />
-                                </div>
-                            </div>
-                        )}
-                    />
+                    <SelectField
+                        icon={Folder}
+                        idName="collectionsId"
+                        items={select}
+                        label="Collections"
+                        placeholder="Collections parent..."
+                        emptyState="No collection folder available, let's create one to start"
+                    >
+                        Collection
+                    </SelectField>
 
                     <div className="flex justify-end">
                         <Button

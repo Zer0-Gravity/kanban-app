@@ -6,6 +6,7 @@ import {
     Calendar1,
     Columns,
     CreditCard,
+    Flag,
     PackageOpen,
     Save,
     Tag,
@@ -33,6 +34,12 @@ import SelectField from "../../utilityComponent/SelectField";
 import { useNavigate } from "react-router";
 import type { Card } from "../../../../type";
 
+const selectPriority = [
+    { label: "High", value: "High" },
+    { label: "Low", value: "Low" },
+    { label: "Medium", value: "Medium" },
+];
+
 function NewCard() {
     const method = useForm();
     const tag = ["Database", "UI/UX", "API", "Route"];
@@ -44,11 +51,13 @@ function NewCard() {
     useEffect(() => {
         async function fetchData() {
             try {
+                //Get the column data from the database
                 const data = await db.columns
                     .where("projectId")
                     .equals(idContainer)
                     .toArray();
 
+                //Map the data for shacnd select component requirement
                 const mappedCol = data.map((items) => ({
                     value: items.id,
                     label: items.columnName,
@@ -62,10 +71,11 @@ function NewCard() {
         fetchData();
     }, [idContainer]);
 
-    if (!columns) return;
+    if (!columns) return; //Give a fallback in case the column send undefined value
 
     async function handleNewCard(data: Card) {
         try {
+            //Add new card data to the database
             await db.cards.add({
                 id: crypto.randomUUID(),
                 columnId: idContainer,
@@ -205,9 +215,22 @@ function NewCard() {
                     />
 
                     <SelectField
+                        icon={Flag}
+                        idName="priority"
+                        items={selectPriority}
+                        label="Priority"
+                        placeholder="Priority.."
+                    >
+                        Priority
+                    </SelectField>
+
+                    <SelectField
                         icon={Columns}
                         idName="columnId"
                         items={columns}
+                        label="Column"
+                        placeholder="Column card.. "
+                        emptyState="No column available in this project, lets create one!"
                     >
                         Select column
                     </SelectField>
