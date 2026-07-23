@@ -78,7 +78,7 @@ function NewCard() {
             //Add new card data to the database
             await db.cards.add({
                 id: crypto.randomUUID(),
-                columnId: idContainer,
+                columnId: data.columnId,
                 cardName: data.cardName,
                 description: data.description,
                 deadlineDate: data.deadlineDate,
