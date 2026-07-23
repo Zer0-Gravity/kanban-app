@@ -17,7 +17,7 @@ function KanbanColumn({ cards, column, index }: KanbanColumnType) {
     return (
         <div
             ref={ref}
-            className={`bg-gray-200 w-87.5 h-fit p-3 rounded-xl select-none ${isDragging ? "opacity-80 border border-button" : null}`}
+            className={`bg-gray-200 min-w-87.5 h-fit p-3 rounded-xl select-none ${isDragging ? "opacity-80 border border-button" : null}`}
         >
             <div className="flex justify-between mb-3">
                 <div className="flex items-center gap-3">

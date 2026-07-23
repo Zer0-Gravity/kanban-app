@@ -5,8 +5,7 @@ import Button from "../utilityComponent/Button";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
 import { format, formatDistanceToNow } from "date-fns";
-import KanbanColumn from "./Kanban/KanbanColumn";
-import { DragDropProvider } from "@dnd-kit/react";
+import KanbanBoard from "./Kanban/KanbanBoard";
 
 function ProjectPage() {
     const { openModal } = useModal();
@@ -14,21 +13,9 @@ function ProjectPage() {
 
     const projectData = useLiveQuery(() => db.projects.get(id));
 
-    const dbColumn = useLiveQuery(() => {
-        if (!projectData) return [];
-
-        return db.columns.where("projectId").equals(projectData.id).toArray();
-    }, [projectData]);
-
-    const dbCard = useLiveQuery(() => db.cards.toArray());
-
     if (!projectData) {
         return;
     }
-
-    console.log(dbCard);
-
-    console.log(dbColumn, dbCard);
 
     return (
         <main className="relative flex flex-col h-screen w-full px-5 pb-5 space-y-3 overflow-hidden">
@@ -88,34 +75,7 @@ function ProjectPage() {
             </section>
 
             {/* Column container */}
-            <div className="flex-1 min-h-0">
-                <DragDropProvider>
-                    <div className="flex items-start gap-4 overflow-auto py-3 w-full h-full scrollbar-custom">
-                        {dbColumn.map((col, index) => {
-                            //Filter down cards belonging strictly to each column
-                            const cards = dbCard.filter(
-                                (card) => card.columnId === col.id,
-                            );
-
-                            return (
-                                <KanbanColumn
-                                    key={col.id}
-                                    index={index}
-                                    column={col}
-                                    cards={cards}
-                                />
-                            );
-                        })}
-
-                        <button
-                            onClick={() => openModal("new-board", id)}
-                            className="bg-gray-200 p-2 rounded-lg"
-                        >
-                            <Plus />
-                        </button>
-                    </div>
-                </DragDropProvider>
-            </div>
+            <KanbanBoard activeProject={projectData.id} />
 
             <Outlet />
         </main>
