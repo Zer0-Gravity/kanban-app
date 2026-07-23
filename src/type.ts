@@ -19,6 +19,7 @@ export interface Columns {
     columnName: string;
     columnTheme: string;
     createdAt: string;
+    order: number;
 }
 
 export interface Card {
@@ -29,6 +30,7 @@ export interface Card {
     description: string;
     priority: Priority;
     tagId: string;
+    order: number;
 }
 
 export interface Task {

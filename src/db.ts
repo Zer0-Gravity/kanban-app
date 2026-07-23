@@ -10,11 +10,11 @@ export const db = new Dexie("kanbanDatabase") as Dexie & {
     tag: EntityTable<Tag, "id">;
 };
 
-db.version(11).stores({
+db.version(12).stores({
     collections: "id",
     projects: "id, collectionsId",
     columns: "id, projectId",
-    cards: "id, columnId",
+    cards: "id, columnId, tagId",
     task: "id, cardId",
     tag: "id",
 });
