@@ -2,6 +2,7 @@ import { MoreHorizontal } from "lucide-react";
 import CardItem from "./CardItem";
 import type { Card, Columns } from "../../../../type";
 import { useSortable } from "@dnd-kit/react/sortable";
+import { CollisionPriority } from "@dnd-kit/abstract";
 
 interface KanbanColumnType {
     column: Columns;
@@ -10,7 +11,13 @@ interface KanbanColumnType {
 }
 
 function KanbanColumn({ cards, column, index }: KanbanColumnType) {
-    const { ref, isDragging } = useSortable({ id: column.id, index });
+    const { ref, isDragging } = useSortable({
+        id: column.id,
+        index,
+        type: "column",
+        accept: ["column", "card"],
+        collisionPriority: CollisionPriority.Low,
+    });
 
     const cardCount = cards.length;
 
@@ -36,11 +43,15 @@ function KanbanColumn({ cards, column, index }: KanbanColumnType) {
             </div>
 
             <div className="flex flex-col gap-3">
-                {cards.length !== 0 ? (
-                    cards.map((card, index) => (
-                        <CardItem key={card.id} card={card} index={index} />
-                    ))
-                ) : (
+                {cards.map((card, index) => (
+                    <CardItem
+                        key={card.id}
+                        card={card}
+                        index={index}
+                        columnId={column.id}
+                    />
+                ))}
+                {cards.length === 0 && (
                     <p className="text-sm p-5 text-center border rounded-lg text-foreground-muted-primary">
                         Make or drag a card here
                     </p>

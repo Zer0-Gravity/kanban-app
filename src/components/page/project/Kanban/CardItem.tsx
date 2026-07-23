@@ -6,12 +6,17 @@ import { format } from "date-fns";
 interface CardType {
     card: Card;
     index: number;
+    columnId: string;
 }
 
-function CardItem({ card, index }: CardType) {
-    const { ref } = useSortable({ id: card.id, index });
-
-    console.log(card);
+function CardItem({ card, index, columnId }: CardType) {
+    const { ref } = useSortable({
+        id: card.id,
+        index,
+        group: columnId,
+        type: "card",
+        accept: ["card"],
+    });
 
     return (
         <div ref={ref} className="rounded-lg p-3 space-y-3 bg-white">
