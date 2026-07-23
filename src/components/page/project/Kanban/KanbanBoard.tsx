@@ -4,20 +4,17 @@ import { Plus } from "lucide-react";
 import { useModal } from "../../../../store";
 import { db } from "../../../../db";
 import { move } from "@dnd-kit/helpers";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Card, Columns } from "../../../../type";
 
 function KanbanBoard({ activeProject }: { activeProject: string }) {
     const { openModal } = useModal();
+
+    //Make temporary state local management
     const [columns, setColumns] = useState<Columns[]>([]);
     const [cardByColumn, setCardByColumn] = useState<Record<string, Card[]>>(
         {},
     );
-
-    // Snapshot of card state, taken right when a drag starts. If the user
-    // cancels mid-drag (Escape key, invalid drop), we roll back to this
-    // instead of whatever half-finished state onDragOver left behind.
-    const cardsSnapshot = useRef<Record<string, Card[]>>({});
 
     useEffect(() => {
         Promise.all([
@@ -26,17 +23,17 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
         ]).then(([cols, cards]) => {
             const grouped: Record<string, Card[]> = {};
 
-            // Seed EVERY column with an empty array first — this is the fix.
-            // Without this line, a column with zero cards has no key at all
-            // in `grouped`, so dropping a card onto it during a drag has
-            // nowhere to land.
+            //Seed empty card without array first giving column that have zero card a key
             for (const col of cols) {
                 grouped[col.id] = [];
             }
 
+            //Distribute every card into their respective column
             for (const card of cards) {
                 (grouped[card.columnId] ??= []).push(card);
             }
+
+            //Short column based on their order
             for (const columnId in grouped) {
                 grouped[columnId].sort((a, b) => a.order - b.order);
             }
@@ -46,23 +43,21 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
         });
     }, [activeProject]);
 
-    // ---------------------------------------------------------------------
-    // PERSIST HELPERS — write the current in-memory positions to Dexie.
-    // `bulkPut` upserts every row in one transaction, matched by primary key.
-    // ---------------------------------------------------------------------
-    async function persistColumnOrder(next: Columns[]) {
+    //Function helper for updating the order of the column into the database using bulkPut from dexie
+    async function updateColumnOrder(next: Columns[]) {
         await db.columns.bulkPut(
             next.map((col, index) => ({ ...col, order: index })),
         );
     }
 
-    async function persistCardOrder(next: Record<string, Card[]>) {
+    //Function helper for updating card
+    async function updateCardPlacement(next: Record<string, Card[]>) {
         const updates: Card[] = [];
+
         for (const columnId in next) {
             next[columnId].forEach((card, index) => {
-                // Rewrite BOTH `order` (position within the column) and
-                // `columnId` (which column it's in) — a card that moved
-                // across columns needs both updated, not just its order.
+                //Update order of the column inside the column in
+                //and update newly dragged card into column
                 updates.push({ ...card, columnId, order: index });
             });
         }
@@ -72,40 +67,35 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
     return (
         <>
             <DragDropProvider
-                onDragStart={() => {
-                    cardsSnapshot.current = cardByColumn;
-                }}
                 onDragOver={(event) => {
                     const { source } = event.operation;
+
                     if (source?.type === "column") return;
+
+                    //Move the card in to the react state for temporary store
                     setCardByColumn((current) => move(current, event));
                 }}
                 onDragEnd={(event) => {
                     const { source } = event.operation;
 
                     if (event.canceled) {
-                        // Drag was aborted — undo whatever onDragOver did,
-                        // and don't write anything to Dexie.
-                        if (source?.type === "card") {
-                            setCardByColumn(cardsSnapshot.current);
-                        }
                         return;
                     }
 
                     if (source?.type === "column") {
+                        //Update the column order into the database
                         setColumns((current) => {
                             const next = move(current, event);
-                            persistColumnOrder(next);
+                            updateColumnOrder(next);
                             return next;
                         });
                         return;
                     }
 
                     if (source?.type === "card") {
-                        // onDragOver already moved the card in state — we
-                        // just need to write the CURRENT state to Dexie.
+                        //Update the card from the react state to the database
                         setCardByColumn((current) => {
-                            persistCardOrder(current);
+                            updateCardPlacement(current);
                             return current;
                         });
                     }
