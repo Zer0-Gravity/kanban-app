@@ -1,4 +1,4 @@
-import { Calendar, Dot, Flag, Plus, Save, Tag, X } from "lucide-react";
+import { Calendar, Dot, Flag, Plus, Save, Tag, Trash, X } from "lucide-react";
 import { useModal } from "../../../store";
 import Button from "../utilityComponent/Button";
 import { Checkbox } from "../../ui/checkbox";
@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
 import { useSortable } from "@dnd-kit/react/sortable";
-import { formatDistanceToNow } from "date-fns";
+import { formatDuration, intervalToDuration } from "date-fns";
 import { DragDropProvider } from "@dnd-kit/react";
 import type { Task } from "../../../type";
 import { move } from "@dnd-kit/helpers";
@@ -33,6 +33,12 @@ function DetailProject() {
 
     if (!dbData) return;
 
+    //Count the deadline duration
+    const deadlineDuration = intervalToDuration({
+        start: new Date(),
+        end: dbData.deadlineDate,
+    });
+
     return (
         <aside className="absolute flex flex-col right-0 top-0 min-w-100 max-w-130 rounded-l-xl p-5 bg-gray-200 h-screen space-y-4">
             <header className="space-y-3">
@@ -58,7 +64,14 @@ function DetailProject() {
                     </p>
                     <p className="text-red-400 flex gap-3 items-center">
                         <Flag size={14} />
-                        <span className="text-sm">{`Deadline in ${formatDistanceToNow(dbData.deadlineDate)}`}</span>
+
+                        {/* Format the deadline day duration using date-fns library display it to hours and days */}
+                        <span className="text-sm">{`Deadline in ${formatDuration(
+                            deadlineDuration,
+                            {
+                                format: ["days", "hours"],
+                            },
+                        )}`}</span>
                     </p>
                 </div>
             </header>
@@ -96,7 +109,7 @@ function DetailProject() {
                                     key={task.id}
                                     id={task.id}
                                     index={index}
-                                    name={task.taskName}
+                                    task={task}
                                 />
                             ))
                         ) : (
@@ -125,18 +138,36 @@ function DetailProject() {
     );
 }
 
-function SortableTask({ id, index, name }) {
+function SortableTask({ id, index, task }) {
     const { ref } = useSortable({ id, index });
+
+    //Update the task status and disable checkbox after change
+    async function updateCheckbox() {
+        try {
+            await db.task.update(id, { done: true });
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <label
             ref={ref}
-            className="bg-white h-12 p-2 flex items-center gap-3 rounded-lg has-checked:opacity-70 hover:scale-102 transition-all cursor-grab"
+            className="bg-white h-12 p-2 flex items-center gap-3 rounded-lg has-checked:opacity-70 hover:scale-102 transition-all cursor-grab justify-between"
         >
-            <Checkbox className="peer rounded-full border-2 border-button data-checked:bg-button size-5 text-white cursor-pointer" />
-            <span className="font-medium select-none peer-data-checked:line-through">
-                {name}
-            </span>
+            <div className="flex gap-3">
+                <Checkbox
+                    className="peer rounded-full border-2 border-button data-checked:bg-button size-5 text-white cursor-pointer"
+                    onCheckedChange={updateCheckbox}
+                    disabled={task.done} 
+                />
+                <span className="font-medium select-none peer-data-checked:line-through">
+                    {task.taskName}
+                </span>
+            </div>
+            <button onClick={() => db.task.delete(id)}>
+                <Trash size={15} />
+            </button>
         </label>
     );
 }

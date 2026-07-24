@@ -39,6 +39,7 @@ export interface Task {
     cardId: string;
     taskName: string;
     order?: number;
+    done: boolean;
 }
 
 export interface Tag {

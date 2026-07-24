@@ -18,6 +18,7 @@ function NewTask() {
                 id: crypto.randomUUID(),
                 taskName: data.taskName,
                 cardId: idContainer,
+                done: false,
             });
 
             closeModal();
