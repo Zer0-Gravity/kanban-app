@@ -1,4 +1,4 @@
-import { DragDropProvider } from "@dnd-kit/react";
+import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
 import KanbanColumn from "./KanbanColumn";
 import { Plus } from "lucide-react";
 import { useModal } from "../../../../store";
@@ -15,6 +15,11 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
     const [cardByColumn, setCardByColumn] = useState<Record<string, Card[]>>(
         {},
     );
+
+    const [active, setActive] = useState<{
+        id: string;
+        type: "column" | "card";
+    } | null>(null);
 
     useEffect(() => {
         Promise.all([
@@ -64,9 +69,19 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
         await db.cards.bulkPut(updates);
     }
 
+    console.log(active);
+
     return (
         <>
             <DragDropProvider
+                onDragStart={(event) => {
+                    const { source } = event.operation;
+
+                    setActive({
+                        id: source.id as string,
+                        type: source.type as "column" | "card",
+                    });
+                }}
                 onDragOver={(event) => {
                     const { source } = event.operation;
 
@@ -124,6 +139,38 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
                         </button>
                     </div>
                 </div>
+
+                <DragOverlay>
+                    {active
+                        ? (active.type === "column" && (
+                              <div>
+                                  <p>Dragging column</p>
+                                  <p>
+                                      {
+                                          columns.find(
+                                              (col) => col.id === active.id,
+                                          ).columnName
+                                      }
+                                  </p>
+                              </div>
+                          )) ||
+                          (active.type === "card" && (
+                              <div>
+                                  <p>Dragging Card</p>
+                                  <p>
+                                      {
+                                          Object.values(cardByColumn)
+                                              .flat()
+                                              .find(
+                                                  (card) =>
+                                                      card.id === active.id,
+                                              ).cardName
+                                      }
+                                  </p>
+                              </div>
+                          ))
+                        : null}
+                </DragOverlay>
             </DragDropProvider>
         </>
     );

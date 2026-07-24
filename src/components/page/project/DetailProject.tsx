@@ -7,7 +7,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { formatDuration, intervalToDuration } from "date-fns";
-import { DragDropProvider } from "@dnd-kit/react";
+import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
 import type { Task } from "../../../type";
 import { move } from "@dnd-kit/helpers";
 
@@ -17,6 +17,7 @@ function DetailProject() {
 
     const { cardId } = useParams();
 
+    //Call both tags and card in the same variable
     const dbData = useLiveQuery(async () => {
         const dbCard = await db.cards.get(cardId);
         const dbTags = await db.tag.where("id").equals(dbCard.tagId).first();
@@ -30,6 +31,7 @@ function DetailProject() {
             [cardId],
         ) ?? [];
 
+    //Helper to save the new ordered task
     async function updateTaskOrder(next: Task[]) {
         await db.task.bulkPut(
             next.map((task, index) => ({ ...task, order: index })),
@@ -129,6 +131,12 @@ function DetailProject() {
                             </div>
                         )}
                     </div>
+
+                    <DragOverlay>
+                        <div className="border-2 border-button bg-white px-4 py-3 rounded-lg">
+                            <p>Dragging task</p>
+                        </div>
+                    </DragOverlay>
                 </DragDropProvider>
             </div>
 
@@ -149,7 +157,7 @@ function DetailProject() {
 }
 
 function SortableTask({ id, index, task }) {
-    const { ref } = useSortable({ id, index });
+    const { ref, isDragging } = useSortable({ id, index });
 
     //Update the task status and disable checkbox after change
     async function updateCheckbox() {
@@ -163,7 +171,7 @@ function SortableTask({ id, index, task }) {
     return (
         <label
             ref={ref}
-            className="bg-white h-12 p-2 flex items-center gap-3 rounded-lg has-checked:opacity-70 hover:scale-102 transition-all cursor-grab justify-between"
+            className={`bg-white h-12 p-2 flex items-center gap-3 rounded-lg has-checked:opacity-70 hover:scale-102 transition-all cursor-grab justify-between ${isDragging && "opacity-50"}`}
         >
             <div className="flex gap-3">
                 <Checkbox
