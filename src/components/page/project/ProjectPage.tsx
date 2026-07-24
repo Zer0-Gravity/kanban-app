@@ -9,9 +9,9 @@ import KanbanBoard from "./Kanban/KanbanBoard";
 
 function ProjectPage() {
     const { openModal } = useModal();
-    const { id } = useParams();
+    const { projectId } = useParams();
 
-    const projectData = useLiveQuery(() => db.projects.get(id));
+    const projectData = useLiveQuery(() => db.projects.get(projectId));
 
     if (!projectData) {
         return;
@@ -67,7 +67,7 @@ function ProjectPage() {
                     <Button
                         icon={CreditCard}
                         customClass="bg-button text-white"
-                        onClick={() => openModal("new-card", id)}
+                        onClick={() => openModal("new-card", projectId)}
                     >
                         New Card
                     </Button>

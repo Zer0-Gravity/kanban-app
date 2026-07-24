@@ -19,7 +19,7 @@ export interface Columns {
     columnName: string;
     columnTheme: string;
     createdAt: string;
-    order: number;
+    order?: number;
 }
 
 export interface Card {
@@ -31,14 +31,14 @@ export interface Card {
     priority: Priority;
     createdAt: string;
     tagId: string;
-    order: number;
+    order?: number;
 }
 
 export interface Task {
     id: string;
     cardId: string;
     taskName: string;
-    order: number;
+    order?: number;
 }
 
 export interface Tag {

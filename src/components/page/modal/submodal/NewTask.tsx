@@ -10,14 +10,14 @@ import { useModal } from "../../../../store";
 
 function NewTask() {
     const method = useForm();
-    const { closeModal } = useModal();
+    const { closeModal, idContainer } = useModal();
 
     async function handleNewTask(data: Task) {
         try {
             await db.task.add({
                 id: crypto.randomUUID(),
                 taskName: data.taskName,
-                cardId: "hello-world",
+                cardId: idContainer,
             });
 
             closeModal();

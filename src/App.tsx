@@ -16,9 +16,12 @@ function App() {
                 <Routes>
                     <Route path="/" element={<RootLayout />}>
                         <Route index element={<MainPage />} />
-                        <Route path="/project/:id" element={<ProjectPage />}>
+                        <Route
+                            path="/project/:projectId"
+                            element={<ProjectPage />}
+                        >
                             <Route
-                                path="detail/:id"
+                                path="detail/:cardId"
                                 element={<DetailProject />}
                             />
                         </Route>

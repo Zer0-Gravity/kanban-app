@@ -7,22 +7,34 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { formatDistanceToNow } from "date-fns";
+import { DragDropProvider } from "@dnd-kit/react";
+import type { Task } from "../../../type";
+import { move } from "@dnd-kit/helpers";
 
 function DetailProject() {
     const { openModal } = useModal();
     const navigate = useNavigate();
 
-    const cardId = useParams();
+    const { cardId } = useParams();
 
     const dbData = useLiveQuery(() => db.cards.get(cardId), [cardId]);
-    const taskList = useLiveQuery(() => db.task.toArray());
+
+    const taskList =
+        useLiveQuery(
+            () => db.task.where("cardId").equals(cardId).sortBy("order"),
+            [cardId],
+        ) ?? [];
+
+    async function updateTaskOrder(next: Task[]) {
+        await db.task.bulkPut(
+            next.map((task, index) => ({ ...task, order: index })),
+        );
+    }
 
     if (!dbData) return;
 
-    if (!taskList) return;
-
     return (
-        <aside className="absolute flex flex-col right-0 top-0 min-w-120 max-w-150 rounded-l-xl p-5 bg-gray-200 h-screen space-y-4">
+        <aside className="absolute flex flex-col right-0 top-0 min-w-100 max-w-130 rounded-l-xl p-5 bg-gray-200 h-screen space-y-4">
             <header className="space-y-3">
                 <div className="flex justify-between items-end">
                     <h1 className="font-semibold text-[40px]">
@@ -63,15 +75,25 @@ function DetailProject() {
             <div className="space-y-4 flex-1">
                 <div className="flex justify-between items-end">
                     <h1 className="font-bold">Current Task</h1>
-                    <Button icon={Plus} onClick={() => openModal("new-task")}>
+                    <Button
+                        icon={Plus}
+                        onClick={() => openModal("new-task", cardId)}
+                    >
                         Task
                     </Button>
                 </div>
-                <p>
+
+                <DragDropProvider
+                    onDragEnd={(event) => {
+                        const next = move(taskList, event);
+                        updateTaskOrder(next);
+                    }}
+                >
                     <div className="h-75 rounded-lg bg-gray-300 p-3 flex-col flex gap-2">
                         {taskList.length !== 0 ? (
                             taskList.map((task, index) => (
                                 <SortableTask
+                                    key={task.id}
                                     id={task.id}
                                     index={index}
                                     name={task.taskName}
@@ -84,7 +106,7 @@ function DetailProject() {
                             </div>
                         )}
                     </div>
-                </p>
+                </DragDropProvider>
             </div>
 
             <div className="flex gap-3 justify-end">
