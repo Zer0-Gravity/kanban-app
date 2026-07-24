@@ -2,6 +2,7 @@ import { Dot, Flag, MoreHorizontal } from "lucide-react";
 import type { Card } from "../../../../type";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { format } from "date-fns";
+import { Link } from "react-router";
 
 interface CardType {
     card: Card;
@@ -19,7 +20,11 @@ function CardItem({ card, index, columnId }: CardType) {
     });
 
     return (
-        <div ref={ref} className="rounded-lg p-3 space-y-3 bg-white">
+        <Link
+            to={`detail/${card.id}`}
+            ref={ref}
+            className="rounded-lg p-3 space-y-3 bg-white"
+        >
             <div className="flex justify-between">
                 <div className="flex gap-3">
                     <p className="py-1 px-2 text-sm rounded-lg bg-blue-600/20 text-blue-600 font-semibold">
@@ -45,7 +50,7 @@ function CardItem({ card, index, columnId }: CardType) {
                 </div>
                 <p>22 Days remaining</p>
             </div>
-        </div>
+        </Link>
     );
 }
 

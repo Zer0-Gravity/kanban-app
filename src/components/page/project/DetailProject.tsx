@@ -2,24 +2,32 @@ import { Calendar, Dot, Flag, Plus, Save, Tag, X } from "lucide-react";
 import { useModal } from "../../../store";
 import Button from "../utilityComponent/Button";
 import { Checkbox } from "../../ui/checkbox";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
 import { useSortable } from "@dnd-kit/react/sortable";
+import { formatDistanceToNow } from "date-fns";
 
 function DetailProject() {
     const { openModal } = useModal();
     const navigate = useNavigate();
 
+    const cardId = useParams();
+
+    const dbData = useLiveQuery(() => db.cards.get(cardId), [cardId]);
     const taskList = useLiveQuery(() => db.task.toArray());
+
+    if (!dbData) return;
 
     if (!taskList) return;
 
     return (
-        <aside className="absolute right-0 top-0 max-w-150 rounded-l-xl p-5 bg-gray-200 h-screen space-y-4">
+        <aside className="absolute flex flex-col right-0 top-0 min-w-120 max-w-150 rounded-l-xl p-5 bg-gray-200 h-screen space-y-4">
             <header className="space-y-3">
                 <div className="flex justify-between items-end">
-                    <h1 className="font-semibold text-[40px]">Project Title</h1>
+                    <h1 className="font-semibold text-[40px]">
+                        {dbData.cardName}
+                    </h1>
                     <div className="flex gap-3">
                         <p className="py-1 px-2 text-sm rounded-lg bg-blue-600/20 text-blue-600 font-semibold flex gap-2 items-center">
                             <Tag size={14} />
@@ -27,18 +35,18 @@ function DetailProject() {
                         </p>
                         <p className="py-1 px-2 text-sm rounded-lg bg-red-600/20 text-red-600 font-semibold flex">
                             <Dot size={20} />
-                            <span>High</span>
+                            <span>{dbData.priority}</span>
                         </p>
                     </div>
                 </div>
                 <div>
                     <p className="flex gap-3 items-center ">
                         <Calendar size={14} />
-                        <span className="text-sm">Date created</span>
+                        <span className="text-sm">{`Created`}</span>
                     </p>
                     <p className="text-red-400 flex gap-3 items-center">
                         <Flag size={14} />
-                        <span className="text-sm">Deadline</span>
+                        <span className="text-sm">{`Deadline in ${formatDistanceToNow(dbData.deadlineDate)}`}</span>
                     </p>
                 </div>
             </header>
@@ -47,23 +55,12 @@ function DetailProject() {
             <div className="space-y-4">
                 <p className="font-semibold">Description</p>
                 <p className="text-sm h-35 overflow-y-auto scrollbar-custom">
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                    Officiis sed dicta, maiores, obcaecati ea modi rem
-                    aspernatur culpa quam cumque error omnis repellat ipsam.
-                    Quis, consequuntur. Dolores iste atque quas. Lorem ipsum
-                    dolor, sit amet consectetur adipisicing elit. Officiis sed
-                    dicta, maiores, obcaecati ea modi rem aspernatur culpa quam
-                    cumque error omnis repellat ipsam. Quis, consequuntur.
-                    Dolores iste atque quas. Lorem ipsum dolor, sit amet
-                    consectetur adipisicing elit. Officiis sed dicta, maiores,
-                    obcaecati ea modi rem aspernatur culpa quam cumque error
-                    omnis repellat ipsam. Quis, consequuntur. Dolores iste atque
-                    quas.
+                    {dbData.description}
                 </p>
             </div>
 
             {/* Task Section */}
-            <div className="space-y-4">
+            <div className="space-y-4 flex-1">
                 <div className="flex justify-between items-end">
                     <h1 className="font-bold">Current Task</h1>
                     <Button icon={Plus} onClick={() => openModal("new-task")}>

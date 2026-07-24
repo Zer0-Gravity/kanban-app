@@ -29,6 +29,7 @@ export interface Card {
     deadlineDate: string;
     description: string;
     priority: Priority;
+    createdAt: string;
     tagId: string;
     order: number;
 }
@@ -37,6 +38,7 @@ export interface Task {
     id: string;
     cardId: string;
     taskName: string;
+    order: number;
 }
 
 export interface Tag {
