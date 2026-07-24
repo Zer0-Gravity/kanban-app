@@ -1,4 +1,4 @@
-import { Calendar, Dot, Flag, Plus, Save, Tag, Trash, X } from "lucide-react";
+import { Calendar, Dot, Flag, Plus, Save, Trash, X } from "lucide-react";
 import { useModal } from "../../../store";
 import Button from "../utilityComponent/Button";
 import { Checkbox } from "../../ui/checkbox";
@@ -17,7 +17,12 @@ function DetailProject() {
 
     const { cardId } = useParams();
 
-    const dbData = useLiveQuery(() => db.cards.get(cardId), [cardId]);
+    const dbData = useLiveQuery(async () => {
+        const dbCard = await db.cards.get(cardId);
+        const dbTags = await db.tag.where("id").equals(dbCard.tagId).first();
+
+        return { ...dbCard, tag: dbTags };
+    }, [cardId]);
 
     const taskList =
         useLiveQuery(
@@ -47,9 +52,14 @@ function DetailProject() {
                         {dbData.cardName}
                     </h1>
                     <div className="flex gap-3">
-                        <p className="py-1 px-2 text-sm rounded-lg bg-blue-600/20 text-blue-600 font-semibold flex gap-2 items-center">
-                            <Tag size={14} />
-                            Database
+                        <p
+                            style={{
+                                color: dbData.tag.tagColor,
+                                backgroundColor: `rgb(from ${dbData.tag.tagColor} r g b / 15%)`,
+                            }}
+                            className="py-1 px-2 text-sm rounded-lg font-semibold"
+                        >
+                            {dbData.tag.tagName}
                         </p>
                         <p className="py-1 px-2 text-sm rounded-lg bg-red-600/20 text-red-600 font-semibold flex">
                             <Dot size={20} />
@@ -159,7 +169,7 @@ function SortableTask({ id, index, task }) {
                 <Checkbox
                     className="peer rounded-full border-2 border-button data-checked:bg-button size-5 text-white cursor-pointer"
                     onCheckedChange={updateCheckbox}
-                    disabled={task.done} 
+                    disabled={task.done}
                 />
                 <span className="font-medium select-none peer-data-checked:line-through">
                     {task.taskName}

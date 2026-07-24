@@ -1,8 +1,11 @@
-import { Dot, Flag, MoreHorizontal } from "lucide-react";
+import { Flag, MoreHorizontal } from "lucide-react";
 import type { Card } from "../../../../type";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { format } from "date-fns";
 import { Link } from "react-router";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "../../../../db";
+import PriorityTags from "../../utilityComponent/PriorityTags";
 
 interface CardType {
     card: Card;
@@ -19,6 +22,12 @@ function CardItem({ card, index, columnId }: CardType) {
         accept: ["card"],
     });
 
+    const tags = useLiveQuery(() =>
+        db.tag.where("id").equals(card.tagId).first(),
+    );
+
+    if (!tags) return;
+
     return (
         <Link
             to={`detail/${card.id}`}
@@ -27,20 +36,26 @@ function CardItem({ card, index, columnId }: CardType) {
         >
             <div className="flex justify-between">
                 <div className="flex gap-3">
-                    <p className="py-1 px-2 text-sm rounded-lg bg-blue-600/20 text-blue-600 font-semibold">
-                        Database
+                    <p
+                        style={{
+                            color: tags.tagColor,
+                            backgroundColor: `rgb(from ${tags.tagColor} r g b / 15%)`,
+                        }}
+                        className="py-1 px-2 text-sm rounded-lg font-semibold"
+                    >
+                        {tags.tagName}
                     </p>
-                    <p className="py-1 px-2 text-sm rounded-lg bg-red-600/20 text-red-600 font-semibold flex">
-                        <Dot size={20} />
-                        <span>High</span>
-                    </p>
+                    <PriorityTags>{card.priority}</PriorityTags>
                 </div>
                 <MoreHorizontal />
             </div>
             <p className="text-[20px] font-semibold mt-3">{card.cardName}</p>
             <p className="truncate text-sm">{card.description}</p>
             <div className="h-2 w-full bg-gray-300 rounded-full">
-                <div className="h-2 bg-blue-600 w-[20%] rounded-full"></div>
+                <div
+                    style={{ backgroundColor: tags.tagColor }}
+                    className="h-2 w-[20%] rounded-full"
+                ></div>
             </div>
             <p className="flex justify-end text-sm">Progress 4/7</p>
             <div className="flex justify-between text-sm">
