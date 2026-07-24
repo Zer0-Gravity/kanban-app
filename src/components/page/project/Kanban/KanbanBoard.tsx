@@ -4,8 +4,9 @@ import { Plus } from "lucide-react";
 import { useModal } from "../../../../store";
 import { db } from "../../../../db";
 import { move } from "@dnd-kit/helpers";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Card, Columns } from "../../../../type";
+import { useLiveQuery } from "dexie-react-hooks";
 
 function KanbanBoard({ activeProject }: { activeProject: string }) {
     const { openModal } = useModal();
@@ -16,37 +17,45 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
         {},
     );
 
+    const isDragging = useRef(false);
+
     const [active, setActive] = useState<{
         id: string;
         type: "column" | "card";
     } | null>(null);
 
-    useEffect(() => {
-        Promise.all([
+    const dbData = useLiveQuery(async () => {
+        const [cols, cards] = await Promise.all([
             db.columns.where("projectId").equals(activeProject).sortBy("order"),
             db.cards.toArray(),
-        ]).then(([cols, cards]) => {
-            const grouped: Record<string, Card[]> = {};
+        ]);
 
-            //Seed empty card without array first giving column that have zero card a key
-            for (const col of cols) {
-                grouped[col.id] = [];
-            }
+        const grouped: Record<string, Card[]> = {};
 
-            //Distribute every card into their respective column
-            for (const card of cards) {
-                (grouped[card.columnId] ??= []).push(card);
-            }
+        //Seed empty card without array first giving column that have zero card a key
+        for (const col of cols) {
+            grouped[col.id] = [];
+        }
 
-            //Short column based on their order
-            for (const columnId in grouped) {
-                grouped[columnId].sort((a, b) => a.order - b.order);
-            }
+        //Distribute every card into their respective column
+        for (const card of cards) {
+            (grouped[card.columnId] ??= []).push(card);
+        }
 
-            setColumns(cols);
-            setCardByColumn(grouped);
-        });
+        //Short column based on their order
+        for (const columnId in grouped) {
+            grouped[columnId].sort((a, b) => a.order - b.order);
+        }
+
+        return { cols, grouped };
     }, [activeProject]);
+
+    useEffect(() => {
+        if (dbData && !isDragging.current) {
+            setColumns(dbData.cols);
+            setCardByColumn(dbData.grouped);
+        }
+    }, [dbData]);
 
     //Function helper for updating the order of the column into the database using bulkPut from dexie
     async function updateColumnOrder(next: Columns[]) {
@@ -69,13 +78,12 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
         await db.cards.bulkPut(updates);
     }
 
-    console.log(active);
-
     return (
         <>
             <DragDropProvider
                 onDragStart={(event) => {
                     const { source } = event.operation;
+                    isDragging.current = true;
 
                     setActive({
                         id: source.id as string,
