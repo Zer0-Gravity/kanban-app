@@ -40,29 +40,40 @@ const selectPriority = [
     { label: "Medium", value: "Medium" },
 ];
 
+interface SelectType {
+    value: string;
+    label: string;
+}
+
 function NewCard() {
     const method = useForm();
-    const tag = ["Database", "UI/UX", "API", "Route"];
     const { idContainer } = useModal();
     const { closeModal } = useModal();
     const navigate = useNavigate();
-    const [columns, setColumns] = useState([]);
+    const [columns, setColumns] = useState<SelectType[]>([]);
+    const [tags, setTags] = useState<SelectType[]>([]);
 
     useEffect(() => {
         async function fetchData() {
             try {
                 //Get the column data from the database
-                const data = await db.columns
-                    .where("projectId")
-                    .equals(idContainer)
-                    .toArray();
+                const [container, tags] = await Promise.all([
+                    db.columns.where("projectId").equals(idContainer).toArray(),
+                    db.tag.toArray(),
+                ]);
 
                 //Map the data for shacnd select component requirement
-                const mappedCol = data.map((items) => ({
+                const mappedCol = container.map((items) => ({
                     value: items.id,
                     label: items.columnName,
                 }));
 
+                const mappedTag = tags.map((t) => ({
+                    value: t.id,
+                    label: t.tagName,
+                }));
+
+                setTags(mappedTag);
                 setColumns(mappedCol);
             } catch (error) {
                 console.log(error);
@@ -72,6 +83,7 @@ function NewCard() {
     }, [idContainer]);
 
     if (!columns) return; //Give a fallback in case the column send undefined value
+    if (!tags) return;
 
     async function handleNewCard(data: Card) {
         try {
@@ -83,8 +95,11 @@ function NewCard() {
                 description: data.description,
                 deadlineDate: data.deadlineDate,
                 priority: data.priority,
+                createdAt: new Date().toISOString(),
                 tagId: data.tagId,
             });
+
+            console.log(data);
         } catch (error) {
             console.log(error);
         }
@@ -150,16 +165,19 @@ function NewCard() {
 
                     {/* Tag */}
                     <Controller
-                        name="tag"
+                        name="tagId"
                         control={method.control}
                         render={({ field }) => (
                             <div className="space-y-3">
                                 <p className="font-semibold">Tag</p>
 
                                 <Combobox
-                                    items={tag}
+                                    items={tags}
                                     value={field.value}
-                                    onValueChange={(val) => field.onChange(val)}
+                                    itemToStringValue={(tag) => tag.label}
+                                    onValueChange={(val) =>
+                                        field.onChange(val.value)
+                                    }
                                 >
                                     <div className="relative text-foreground-muted-primary">
                                         <ComboboxInput
@@ -198,13 +216,13 @@ function NewCard() {
                                             </div>
                                         </ComboboxEmpty>
                                         <ComboboxList className="bg-foreground-muted-secondary rounded-xl">
-                                            {(items) => (
+                                            {(tag) => (
                                                 <ComboboxItem
-                                                    key={items}
-                                                    value={items}
+                                                    key={tag.value}
+                                                    value={tag}
                                                     className="data-highlighted:text-white data-highlighted:bg-button data-select:bg-button"
                                                 >
-                                                    {items}
+                                                    {tag.label}
                                                 </ComboboxItem>
                                             )}
                                         </ComboboxList>

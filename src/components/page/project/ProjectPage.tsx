@@ -11,7 +11,10 @@ function ProjectPage() {
     const { openModal } = useModal();
     const { projectId } = useParams();
 
-    const projectData = useLiveQuery(() => db.projects.get(projectId));
+    const projectData = useLiveQuery(
+        () => db.projects.get(projectId),
+        [projectId],
+    );
 
     if (!projectData) {
         return;
