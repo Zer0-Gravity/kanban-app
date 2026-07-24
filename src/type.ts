@@ -45,6 +45,7 @@ export interface Task {
 export interface Tag {
     id: string;
     tagName: string;
+    tagColor: string;
 }
 
 export type Priority = "High" | "Medium" | "Low";

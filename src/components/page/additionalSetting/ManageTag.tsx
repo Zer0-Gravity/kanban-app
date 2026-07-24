@@ -35,18 +35,12 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from "../../ui/dropdown-menu";
+import { useModal } from "../../../store";
+import type { Tag } from "../../../type";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "../../../db";
 
-interface DataTagType {
-    tagName: string;
-    color: string;
-}
-
-const data: DataTagType[] = [
-    { tagName: "Database", color: "5d5d5d" },
-    { tagName: "API Route", color: "009cff" },
-];
-
-const columns: ColumnDef<DataTagType>[] = [
+const columns: ColumnDef<Tag>[] = [
     {
         id: "number",
         header: () => <span>No</span>,
@@ -63,16 +57,18 @@ const columns: ColumnDef<DataTagType>[] = [
             <div className="flex items-center gap-3">
                 <div
                     className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: `#${row.original.color}` }}
+                    style={{ backgroundColor: `${row.original.tagColor}` }}
                 />
-                <span>#{row.original.color}</span>
+                <span style={{ color: row.original.tagColor }}>
+                    {row.original.tagColor}
+                </span>
             </div>
         ),
     },
     {
         id: "action",
         header: () => <span>Action</span>,
-        cell: () => (
+        cell: ({ row }) => (
             <DropdownMenu>
                 <DropdownMenuTrigger>
                     <MoreHorizontal size={20} />
@@ -87,7 +83,10 @@ const columns: ColumnDef<DataTagType>[] = [
                             <Pencil />
                             <span>Update</span>
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-400 hover:bg-foreground-muted-secondary">
+                        <DropdownMenuItem
+                            className="text-red-400 hover:bg-foreground-muted-secondary"
+                            onClick={() => db.tag.delete(row.original.id)}
+                        >
                             <Trash />
                             <span>Delete</span>
                         </DropdownMenuItem>
@@ -100,6 +99,9 @@ const columns: ColumnDef<DataTagType>[] = [
 
 function ManageTag() {
     const [filterData, setFilterData] = useState<ColumnFiltersState>([]);
+    const { openModal } = useModal();
+
+    const data = useLiveQuery(() => db.tag.toArray());
 
     // eslint-disable-next-line react-hooks/incompatible-library
     const table = useReactTable({
@@ -112,10 +114,16 @@ function ManageTag() {
         state: {
             columnFilters: filterData,
         },
+        initialState: {
+            pagination: {
+                pageSize: 10,
+            },
+        },
     });
 
+    if (!data) return;
     return (
-        <main className="h-full w-full md:w-175 gap-5 flex flex-col ">
+        <main className="h-full w-full md:w-175 gap-5 flex flex-col  ">
             <header className="space-y-3 mt-10">
                 <div className="flex gap-3 items-center">
                     <h1 className="font-bold text-[50px]">Manage Tag</h1>
@@ -143,7 +151,11 @@ function ManageTag() {
                             ?.setFilterValue(e.target.value)
                     }
                 />
-                <Button icon={Plus} customClass="text-button">
+                <Button
+                    icon={Plus}
+                    customClass="text-button"
+                    onClick={() => openModal("new-tag")}
+                >
                     New Tag
                 </Button>
             </div>

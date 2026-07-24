@@ -3,6 +3,7 @@ import NewBoard from "./submodal/NewBoard";
 import NewCard from "./submodal/NewCard";
 import NewCollections from "./submodal/NewCollections";
 import NewProject from "./submodal/NewProject";
+import NewTag from "./submodal/NewTag";
 import NewTask from "./submodal/NewTask";
 
 function MainModal() {
@@ -15,6 +16,7 @@ function MainModal() {
             {modalName === "new-board" && <NewBoard />}
             {modalName === "new-task" && <NewTask />}
             {modalName === "new-collections" && <NewCollections />}
+            {modalName === "new-tag" && <NewTag />}
         </main>
     );
 }

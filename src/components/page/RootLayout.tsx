@@ -6,7 +6,7 @@ function RootLayout() {
     return (
         <SidebarProvider>
             <AppSidebar />
-            <main className="relative h-full w-full overflow-hidden">
+            <main className="relative h-full w-full flex justify-center overflow-hidden">
                 <SidebarTrigger className="mb-4 absolute top-5 left-2 z-10" />
                 <Outlet />
             </main>
