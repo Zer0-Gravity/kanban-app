@@ -78,7 +78,7 @@ function ProjectPage() {
             </section>
 
             {/* Column container */}
-            <KanbanBoard activeProject={projectData.id} />
+            <KanbanBoard key={projectData.id} activeProject={projectData.id} />
 
             <Outlet />
         </main>
