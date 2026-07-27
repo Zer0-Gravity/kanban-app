@@ -43,10 +43,13 @@ function MainPage() {
                 <p className="font-semibold text-lg">Recent Project</p>
                 <div className="h-50 border rounded-lg p-2 flex flex-col">
                     <div className="w-full h-full flex items-center justify-center">
-                        <span>
+                        {/* <span>
                             Your recent project will appear here once you create
                             one!
-                        </span>
+                        </span> */}
+                        <div className="w-full border rounded-lg p-4">
+                            <File />
+                        </div>
                     </div>
                 </div>
                 <div className="flex gap-5 justify-end">

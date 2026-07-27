@@ -1,16 +1,14 @@
 import { Outlet } from "react-router";
-import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
-import AppSidebar from "./navbar/navbar";
+import Sidebar from "./navbar/Sidebar";
 
 function RootLayout() {
     return (
-        <SidebarProvider>
-            <AppSidebar />
-            <main className="relative h-full w-full flex justify-center overflow-hidden">
-                <SidebarTrigger className="mb-4 absolute top-5 left-2 z-10" />
+        <main className="flex gap-2 h-full">
+            <Sidebar />
+            <div className="relative h-full w-full flex justify-center overflow-hidden">
                 <Outlet />
-            </main>
-        </SidebarProvider>
+            </div>
+        </main>
     );
 }
 

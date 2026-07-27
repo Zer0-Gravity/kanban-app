@@ -14,7 +14,7 @@ interface CardType {
 }
 
 function CardItem({ card, index, columnId }: CardType) {
-    const { ref } = useSortable({
+    const { ref, isDragging } = useSortable({
         id: card.id,
         index,
         group: columnId,
@@ -32,7 +32,7 @@ function CardItem({ card, index, columnId }: CardType) {
         <Link
             to={`detail/${card.id}`}
             ref={ref}
-            className="rounded-lg p-3 space-y-3 bg-white"
+            className={`rounded-lg p-3 space-y-3 bg-white ${isDragging && "opacity-50"}`}
         >
             <div className="flex justify-between">
                 <div className="flex gap-3">
