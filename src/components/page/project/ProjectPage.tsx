@@ -3,10 +3,10 @@ import { Outlet, useParams } from "react-router";
 
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
-import { formatDistanceToNow } from "date-fns";
 import KanbanBoard from "./Kanban/KanbanBoard";
-import { motion, spring } from "motion/react";
+import { motion } from "motion/react";
 import { useState } from "react";
+import OverviewPage from "./OverviewPage";
 
 function ProjectPage() {
     const { projectId } = useParams();
@@ -28,24 +28,18 @@ function ProjectPage() {
     }
 
     return (
-        <main className="relative flex flex-col h-screen w-full px-10 justify-center pb-5 space-y-3 overflow-hidden bg-slate-300">
+        <main className="relative flex flex-col h-screen w-full px-5 justify-center pb-2 space-y-3 overflow-hidden bg-slate-300">
             <header className="mt-8 flex justify-between">
-                <div>
-                    <h1 className="text-[30px] font-bold">
-                        {projectData.projectName}
-                    </h1>
-                    <p className="text-[12px] text-muted">
-                        {`Created ${formatDistanceToNow(projectData.createdAt)} ago`}
-                    </p>
-                </div>
+                <h1 className="text-[30px] font-bold">
+                    {projectData.projectName}
+                </h1>
             </header>
 
             <section className="flex justify-between items-end">
                 <div className="flex gap-4">
                     {tabs.map((tab, index) => (
-                        <div className="relative">
+                        <div key={index} className="relative">
                             <button
-                                key={index}
                                 className={`flex gap-2 items-center p-2 ${activeTab === tab.title ? "font-semibold" : "text-slate-500"}`}
                                 onClick={() => setActiveTab(tab.title)}
                             >
@@ -57,7 +51,7 @@ function ProjectPage() {
                                 <motion.div
                                     layoutId="tab"
                                     transition={{
-                                        type: spring,
+                                        type: "spring",
                                         stiffness: 200,
                                         damping: 20,
                                     }}
@@ -69,8 +63,24 @@ function ProjectPage() {
                 </div>
             </section>
 
-            {/* Column container */}
-            <KanbanBoard key={projectData.id} activeProject={projectData.id} />
+            <div className="h-full min-h-0 w-full scrollbar-custom">
+                {/* Overview */}
+                {activeTab === "Overview" && (
+                    <OverviewPage
+                        key={projectData.id}
+                        descriptions={projectData.description}
+                        id={projectData.id}
+                    />
+                )}
+
+                {/* Column container */}
+                {activeTab === "Kanban" && (
+                    <KanbanBoard
+                        key={projectData.id}
+                        activeProject={projectData.id}
+                    />
+                )}
+            </div>
 
             <Outlet />
         </main>

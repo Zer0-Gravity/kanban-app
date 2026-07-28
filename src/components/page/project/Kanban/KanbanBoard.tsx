@@ -124,28 +124,27 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
                     }
                 }}
             >
-                <div className="flex-1 min-h-0">
-                    <div className="flex items-start gap-4 overflow-auto py-3 w-full h-full scrollbar-custom">
-                        {columns.map((col, index) => {
-                            return (
-                                <KanbanColumn
-                                    key={col.id}
-                                    index={index}
-                                    column={col}
-                                    cards={cardByColumn[col.id] || []}
-                                />
-                            );
-                        })}
+                <div className="flex justify-end mb-5">
+                    <button
+                        onClick={() => openModal("new-board", activeProject)}
+                        className="bg-gray-200 p-2 rounded-lg flex gap-2 items-center"
+                    >
+                        <Plus size={14} />
+                        <span className="text-[14px] font-medium">Column</span>
+                    </button>
+                </div>
 
-                        <button
-                            onClick={() =>
-                                openModal("new-board", activeProject)
-                            }
-                            className="bg-gray-200 p-2 rounded-lg"
-                        >
-                            <Plus />
-                        </button>
-                    </div>
+                <div className="flex gap-4 py-3 scrollbar-custom min-h-0 overflow-auto h-full w-full">
+                    {columns.map((col, index) => {
+                        return (
+                            <KanbanColumn
+                                key={col.id}
+                                index={index}
+                                column={col}
+                                cards={cardByColumn[col.id] || []}
+                            />
+                        );
+                    })}
                 </div>
 
                 <DragOverlay>

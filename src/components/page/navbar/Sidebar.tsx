@@ -180,9 +180,8 @@ function Workspace({
             {/* Projects List */}
             {!isCollapse &&
                 collectionsTree.map((project, index) => (
-                    <CollapsibleContent>
+                    <CollapsibleContent key={project.id}>
                         <MotionCollapse
-                            key={project.id}
                             initial={{ y: -5, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: -5, opacity: 0 }}
