@@ -1,6 +1,6 @@
 import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
 import KanbanColumn from "./KanbanColumn";
-import { Plus } from "lucide-react";
+import { Columns2, Paperclip, Plus } from "lucide-react";
 import { useModal } from "../../../../store";
 import { db } from "../../../../db";
 import { move } from "@dnd-kit/helpers";
@@ -78,6 +78,17 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
         await db.cards.bulkPut(updates);
     }
 
+    //Get the column and card data when the column/column get dragged
+    const activeColumn = active
+        ? columns.find((col) => col.id === active.id)
+        : null;
+
+    const activeCard = active
+        ? Object.values(cardByColumn)
+              .flat()
+              .find((card) => card.id === active.id)
+        : null;
+
     return (
         <main className="flex flex-col gap-4 h-full overflow-hidden">
             <DragDropProvider
@@ -150,29 +161,22 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
                 <DragOverlay>
                     {active
                         ? (active.type === "column" && (
-                              <div>
-                                  <p>Dragging column</p>
-                                  <p>
-                                      {
-                                          columns.find(
-                                              (col) => col.id === active.id,
-                                          ).columnName
-                                      }
-                                  </p>
+                              <div
+                                  style={{
+                                      borderColor: activeColumn.columnTheme,
+                                      backgroundColor: `${activeColumn.columnTheme}30`,
+                                  }}
+                                  className="flex items-center justify-center rounded-lg gap-2 w-67.5 border-2 border-dashed h-25 backdrop-blur-xs"
+                              >
+                                  <Columns2 />
+                                  <p>{activeColumn.columnName}</p>
                               </div>
                           )) ||
                           (active.type === "card" && (
-                              <div>
-                                  <p>Dragging Card</p>
-                                  <p>
-                                      {
-                                          Object.values(cardByColumn)
-                                              .flat()
-                                              .find(
-                                                  (card) =>
-                                                      card.id === active.id,
-                                              ).cardName
-                                      }
+                              <div className="flex items-center justify-center rounded-lg gap-2 w-62.5 border-2 border-dashed h-25 backdrop-blur-xs">
+                                  <Paperclip />
+                                  <p className="truncate">
+                                      {activeCard.cardName}
                                   </p>
                               </div>
                           ))

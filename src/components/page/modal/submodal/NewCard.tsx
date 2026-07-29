@@ -4,7 +4,6 @@ import ModalContainer from "../../utilityComponent/ModalContainer";
 import CustomInputField from "../../utilityComponent/CustomInputField";
 import {
     Calendar1,
-    Columns,
     CreditCard,
     Flag,
     PackageOpen,
@@ -47,26 +46,16 @@ interface SelectType {
 
 function NewCard() {
     const method = useForm();
-    const { idContainer } = useModal();
-    const { closeModal } = useModal();
+    const { closeModal, idContainer } = useModal();
     const navigate = useNavigate();
-    const [columns, setColumns] = useState<SelectType[]>([]);
+
     const [tags, setTags] = useState<SelectType[]>([]);
 
     useEffect(() => {
         async function fetchData() {
             try {
                 //Get the column data from the database
-                const [container, tags] = await Promise.all([
-                    db.columns.where("projectId").equals(idContainer).toArray(),
-                    db.tag.toArray(),
-                ]);
-
-                //Map the data for shacnd select component requirement
-                const mappedCol = container.map((items) => ({
-                    value: items.id,
-                    label: items.columnName,
-                }));
+                const tags = await db.tag.toArray();
 
                 const mappedTag = tags.map((t) => ({
                     value: t.id,
@@ -74,7 +63,6 @@ function NewCard() {
                 }));
 
                 setTags(mappedTag);
-                setColumns(mappedCol);
             } catch (error) {
                 console.log(error);
             }
@@ -82,7 +70,6 @@ function NewCard() {
         fetchData();
     }, [idContainer]);
 
-    if (!columns) return; //Give a fallback in case the column send undefined value
     if (!tags) return;
 
     async function handleNewCard(data: Card) {
@@ -90,7 +77,7 @@ function NewCard() {
             //Add new card data to the database
             await db.cards.add({
                 id: crypto.randomUUID(),
-                columnId: data.columnId,
+                columnId: idContainer,
                 cardName: data.cardName,
                 description: data.description,
                 deadlineDate: data.deadlineDate,
@@ -99,7 +86,7 @@ function NewCard() {
                 tagId: data.tagId,
             });
 
-            console.log(data);
+            closeModal();
         } catch (error) {
             console.log(error);
         }
@@ -240,17 +227,6 @@ function NewCard() {
                         placeholder="Priority.."
                     >
                         Priority
-                    </SelectField>
-
-                    <SelectField
-                        icon={Columns}
-                        idName="columnId"
-                        items={columns}
-                        label="Column"
-                        placeholder="Column card.. "
-                        emptyState="No column available in this project, lets create one!"
-                    >
-                        Select column
                     </SelectField>
 
                     <div className="flex justify-end">

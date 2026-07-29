@@ -55,7 +55,9 @@ function CardItem({ card, index, columnId }: CardType) {
                 <MoreHorizontal size={14} />
             </div>
             <p className="text-[14px] font-semibold mt-3">{card.cardName}</p>
-            <p className="truncate text-sm text-[12px]">{card.description}</p>
+            <p className="truncate text-sm text-[12px]">
+                {card.description || "No Description"}
+            </p>
             <div className="h-2 w-full bg-gray-300 rounded-full">
                 <div
                     style={{ backgroundColor: tags.tagColor }}
