@@ -63,7 +63,7 @@ function ProjectPage() {
                 </div>
             </section>
 
-            <div className="h-full min-h-0 w-full scrollbar-custom">
+            <div className="flex-1 min-h-0 overflow-hidden">
                 {/* Overview */}
                 {activeTab === "Overview" && (
                     <OverviewPage

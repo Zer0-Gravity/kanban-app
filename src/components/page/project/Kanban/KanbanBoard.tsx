@@ -79,7 +79,7 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
     }
 
     return (
-        <>
+        <main className="flex flex-col gap-4 h-full overflow-hidden">
             <DragDropProvider
                 onDragStart={(event) => {
                     const { source } = event.operation;
@@ -124,7 +124,7 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
                     }
                 }}
             >
-                <div className="flex justify-end mb-5">
+                <div className="flex justify-end">
                     <button
                         onClick={() => openModal("new-board", activeProject)}
                         className="bg-gray-200 p-2 rounded-lg flex gap-2 items-center"
@@ -134,7 +134,7 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
                     </button>
                 </div>
 
-                <div className="flex gap-4 py-3 scrollbar-custom min-h-0 overflow-auto h-full w-full">
+                <div className="flex flex-1 gap-4 py-3 scrollbar-custom min-h-0 overflow-x-auto overflow-y-hidden">
                     {columns.map((col, index) => {
                         return (
                             <KanbanColumn
@@ -179,7 +179,7 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
                         : null}
                 </DragOverlay>
             </DragDropProvider>
-        </>
+        </main>
     );
 }
 

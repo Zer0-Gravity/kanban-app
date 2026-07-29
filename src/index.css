@@ -37,12 +37,16 @@ span {
 }
 
 .scrollbar-custom::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 2px;
+    height: 8px;
     background-color: white;
     border-radius: 10px;
 }
 .scrollbar-custom::-webkit-scrollbar-thumb {
     background-color: #009cff;
     border-radius: 10px;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
 }
