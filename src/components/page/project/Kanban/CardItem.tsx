@@ -1,7 +1,7 @@
-import { Flag, MoreHorizontal } from "lucide-react";
+import { CalendarFold, MoreHorizontal } from "lucide-react";
 import type { Card } from "../../../../type";
 import { useSortable } from "@dnd-kit/react/sortable";
-import { format } from "date-fns";
+import { formatDuration, intervalToDuration } from "date-fns";
 import { Link } from "react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../../db";
@@ -26,13 +26,18 @@ function CardItem({ card, index, columnId }: CardType) {
         db.tag.where("id").equals(card.tagId).first(),
     );
 
+    const deadlineDuration = intervalToDuration({
+        start: new Date(),
+        end: card.deadlineDate,
+    });
+
     if (!tags) return;
 
     return (
         <Link
             to={`detail/${card.id}`}
             ref={ref}
-            className={`rounded-lg p-3 space-y-3 bg-white ${isDragging && "opacity-50"}`}
+            className={`rounded-lg p-3 w-62.5 space-y-2 bg-white ${isDragging && "opacity-50"}`}
         >
             <div className="flex justify-between">
                 <div className="flex gap-3">
@@ -41,29 +46,26 @@ function CardItem({ card, index, columnId }: CardType) {
                             color: tags.tagColor,
                             backgroundColor: `rgb(from ${tags.tagColor} r g b / 15%)`,
                         }}
-                        className="py-1 px-2 text-sm rounded-lg font-semibold"
+                        className="py-1 px-2 text-[12px] rounded-lg font-semibold"
                     >
                         {tags.tagName}
                     </p>
                     <PriorityTags>{card.priority}</PriorityTags>
                 </div>
-                <MoreHorizontal />
+                <MoreHorizontal size={14} />
             </div>
-            <p className="text-[20px] font-semibold mt-3">{card.cardName}</p>
-            <p className="truncate text-sm">{card.description}</p>
+            <p className="text-[14px] font-semibold mt-3">{card.cardName}</p>
+            <p className="truncate text-sm text-[12px]">{card.description}</p>
             <div className="h-2 w-full bg-gray-300 rounded-full">
                 <div
                     style={{ backgroundColor: tags.tagColor }}
                     className="h-2 w-[20%] rounded-full"
                 ></div>
             </div>
-            <p className="flex justify-end text-sm">Progress 4/7</p>
-            <div className="flex justify-between text-sm">
-                <div className="flex gap-2 items-center text-red-600">
-                    <Flag size={18} />
-                    <p>{format(card.deadlineDate, "PPPP")}</p>
-                </div>
-                <p>22 Days remaining</p>
+            <p className="flex justify-end text-[12px]">Progress 4/7</p>
+            <div className="flex gap-2 items-center text-red-600">
+                <CalendarFold size={10} />
+                <p className="text-[12px]">{`${formatDuration(deadlineDuration, { format: ["days"] })} remaining`}</p>
             </div>
         </Link>
     );
