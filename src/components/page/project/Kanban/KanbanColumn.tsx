@@ -40,8 +40,6 @@ function KanbanColumn({ cards, column, index }: KanbanColumnType) {
         }
     }
 
-    console.log(cards.map((m) => m.deadlineDate));
-
     return (
         <div
             ref={ref}

@@ -1,4 +1,4 @@
-import { CalendarFold, Clock, Minus } from "lucide-react";
+import { CalendarFold, CheckCircle, Clock, Minus } from "lucide-react";
 import type { Card } from "../../../../type";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { intervalToDuration } from "date-fns";
@@ -7,6 +7,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../../db";
 import PriorityTags from "../../utilityComponent/PriorityTags";
 import { durationLeft, urgent } from "../../../../utils";
+import { useState } from "react";
 
 interface CardType {
     card: Card;
@@ -45,6 +46,30 @@ function CardItem({ card, index, columnId }: CardType) {
             console.log(error);
         }
     }
+
+    const dbTask = useLiveQuery(async () => {
+        const taskList = await db.task
+            .where("cardId")
+            .equals(card.id)
+            .toArray();
+
+        //Get all total task that available on each  card
+        const total = taskList.length;
+
+        if (total === 0) {
+            return { total: 0, status: 0, current: 0 };
+        }
+
+        //Get the total task that flagged as done
+        const current = taskList.filter((task) => task.done === true).length;
+
+        //Calculate the for the width
+        const status = Math.round((current / total) * 100);
+
+        return { total, status, current };
+    }, [card.id]);
+
+    const { total, status, current } = dbTask ?? {};
 
     if (!tags) return;
 
@@ -86,15 +111,34 @@ function CardItem({ card, index, columnId }: CardType) {
             </p>
             <div className="h-2 w-full bg-gray-300 rounded-full">
                 <div
-                    style={{ backgroundColor: tags.tagColor }}
-                    className="h-2 w-[20%] rounded-full"
-                ></div>
+                    style={{
+                        backgroundColor: tags.tagColor,
+                        width: `${status}%`,
+                    }}
+                    className={`h-2 rounded-full`}
+                />
             </div>
-            <p className="flex justify-end text-[12px]">Progress 4/7</p>
+
+            {total !== 0 && current !== total && (
+                <p className="flex justify-end text-[12px]">
+                    Progress {current}/{total}
+                </p>
+            )}
+
+            {total === 0 && (
+                <p className="flex justify-end text-[12px]">No task yet</p>
+            )}
+
+            {current === total && total !== 0 && (
+                <div className="flex justify-end text-[12px] gap-2 items-center text-green-600">
+                    <CheckCircle size={12} />
+                    <p>Done</p>
+                </div>
+            )}
             <div
                 className={`flex gap-2 items-center ${isUrgent && "text-red-500"} }`}
             >
-                <CalendarFold size={10} />
+                <CalendarFold size={14} />
                 <p className="text-[12px]">{`${durationLeft(deadlineDuration)}`}</p>
             </div>
         </Link>
