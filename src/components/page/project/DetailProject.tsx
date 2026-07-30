@@ -1,4 +1,13 @@
-import { Calendar, Dot, Flag, Plus, Save, Trash, X } from "lucide-react";
+import {
+    CalendarFold,
+    CopyCheck,
+    Edit,
+    Flag,
+    Minus,
+    Plus,
+    TextInitial,
+    Trash,
+} from "lucide-react";
 import { useModal } from "../../../store";
 import Button from "../utilityComponent/Button";
 import { Checkbox } from "../../ui/checkbox";
@@ -6,16 +15,21 @@ import { useNavigate, useParams } from "react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
 import { useSortable } from "@dnd-kit/react/sortable";
-import { formatDuration, intervalToDuration } from "date-fns";
+import { format, formatDuration, intervalToDuration } from "date-fns";
 import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
 import type { Task } from "../../../type";
 import { move } from "@dnd-kit/helpers";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../../ui/sheet";
+import { Separator } from "@base-ui/react";
+import { PriorityDetail } from "../utilityComponent/PriorityTags";
+import { useRef } from "react";
 
 function DetailProject() {
     const { openModal } = useModal();
     const navigate = useNavigate();
 
-    const { cardId } = useParams();
+    const { projectId, cardId } = useParams();
+    const titleRef = useRef(null);
 
     //Call both tags and card in the same variable
     const dbData = useLiveQuery(async () => {
@@ -46,113 +60,162 @@ function DetailProject() {
         end: dbData.deadlineDate,
     });
 
+    //function for drawer close
+    function handleClose() {
+        navigate(`/project/${projectId}`);
+    }
+
+    //function to delete the card alongside its task
+    async function handleDelete() {
+        try {
+            Promise.all([
+                db.cards.delete(cardId),
+                db.task.where("cardId").equals(cardId).delete(),
+            ]);
+
+            handleClose();
+        } catch (error) {
+            console.log(error);
+        }
+    }
     return (
-        <aside className="absolute flex flex-col right-0 top-0 min-w-100 max-w-130 rounded-l-xl p-5 bg-gray-200 h-screen space-y-4">
-            <header className="space-y-3">
-                <div className="flex justify-between items-end">
-                    <h1 className="font-semibold text-[40px]">
-                        {dbData.cardName}
-                    </h1>
-                    <div className="flex gap-3">
-                        <p
-                            style={{
-                                color: dbData.tag.tagColor,
-                                backgroundColor: `rgb(from ${dbData.tag.tagColor} r g b / 15%)`,
-                            }}
-                            className="py-1 px-2 text-sm rounded-lg font-semibold"
-                        >
-                            {dbData.tag.tagName}
-                        </p>
-                        <p className="py-1 px-2 text-sm rounded-lg bg-red-600/20 text-red-600 font-semibold flex">
-                            <Dot size={20} />
-                            <span>{dbData.priority}</span>
-                        </p>
-                    </div>
-                </div>
+        <Sheet
+            open={true}
+            onOpenChange={(open) => {
+                if (!open) {
+                    handleClose();
+                }
+            }}
+        >
+            <SheetContent className="w-112.5! sm:max-w-none! p-3! bg-white rounded-xl border-none">
+                <SheetHeader className="p-0">
+                    <SheetTitle className="flex items-center">
+                        <input
+                            ref={titleRef}
+                            type="text"
+                            value={dbData.cardName}
+                            className="text-[30px] outline-none w-70 pointer-events-none cursor-default caret-amber-400"
+                            onChange={(e) =>
+                                db.cards.update(cardId, {
+                                    cardName: e.target.value,
+                                })
+                            }
+                        />
+                        <div className="flex gap-2">
+                            <Edit
+                                size={14}
+                                onClick={() => titleRef.current.focus()}
+                            />
+                            <Trash size={14} onClick={handleDelete} />
+                        </div>
+                    </SheetTitle>
+                </SheetHeader>
+
                 <div>
                     <p className="flex gap-3 items-center ">
-                        <Calendar size={14} />
-                        <span className="text-sm">{`Created`}</span>
+                        <CalendarFold size={14} />
+                        <span className="text-[12px]">{`Created ${format(dbData.createdAt, "PPP")}`}</span>
                     </p>
-                    <p className="text-red-400 flex gap-3 items-center">
-                        <Flag size={14} />
+                    <div className="flex justify-between">
+                        <p className="text-red-400 flex gap-3 items-center">
+                            <Flag size={14} />
 
-                        {/* Format the deadline day duration using date-fns library display it to hours and days */}
-                        <span className="text-sm">{`Deadline in ${formatDuration(
-                            deadlineDuration,
-                            {
-                                format: ["days", "hours"],
-                            },
-                        )}`}</span>
-                    </p>
+                            {/* Format the deadline day duration using date-fns library display it to hours and days */}
+                            <span className="text-[12px]">{`Deadline in ${formatDuration(
+                                deadlineDuration,
+                                {
+                                    format: ["days"],
+                                },
+                            )}`}</span>
+                        </p>
+
+                        <div className="flex gap-2">
+                            <p className="text-[12px] flex gap-2">
+                                Priority :{" "}
+                                <PriorityDetail>
+                                    {dbData.priority}
+                                </PriorityDetail>
+                            </p>
+                            <p className="text-[12px] flex gap-2">
+                                Tag:{" "}
+                                <span
+                                    style={{ color: dbData.tag.tagColor }}
+                                    className="font-semibold"
+                                >
+                                    {dbData.tag.tagName}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
                 </div>
-            </header>
 
-            {/* Description */}
-            <div className="space-y-4">
-                <p className="font-semibold">Description</p>
-                <p className="text-sm h-35 overflow-y-auto scrollbar-custom">
-                    {dbData.description}
-                </p>
-            </div>
+                <Separator className="bg-black w-full h-0.5" />
 
-            {/* Task Section */}
-            <div className="space-y-4 flex-1">
-                <div className="flex justify-between items-end">
-                    <h1 className="font-bold">Current Task</h1>
-                    <Button
-                        icon={Plus}
-                        onClick={() => openModal("new-task", cardId)}
-                    >
-                        Task
-                    </Button>
+                {/* Description */}
+                <div className="space-y-4">
+                    <div className="flex gap-2 items-center">
+                        <TextInitial size={16} />
+                        <p className="font-semibold">Description</p>
+                    </div>
+                    <textarea
+                        className="h-70 border w-full p-2 rounded-lg outline-none"
+                        value={dbData.description}
+                        onChange={(e) =>
+                            db.cards.update(cardId, {
+                                description: e.target.value,
+                            })
+                        }
+                    />
                 </div>
 
-                <DragDropProvider
-                    onDragEnd={(event) => {
-                        const next = move(taskList, event);
-                        updateTaskOrder(next);
-                    }}
-                >
-                    <div className="h-75 rounded-lg bg-gray-300 p-3 flex-col flex gap-2">
-                        {taskList.length !== 0 ? (
-                            taskList.map((task, index) => (
-                                <SortableTask
-                                    key={task.id}
-                                    id={task.id}
-                                    index={index}
-                                    task={task}
-                                />
-                            ))
-                        ) : (
-                            <div className="w-full text-center p-4 font-semibold text-sm">
-                                No task currently listed, start creating new
-                                task and track your progress!!
-                            </div>
-                        )}
+                {/* Task Section */}
+                <div className="space-y-4 flex-1">
+                    <div className="flex justify-between items-end">
+                        <div className="flex gap-2">
+                            <CopyCheck size={16} />
+                            <h1 className="font-bold">Current Task</h1>
+                        </div>
+                        <Button
+                            icon={Plus}
+                            onClick={() => openModal("new-task", cardId)}
+                        >
+                            Task
+                        </Button>
                     </div>
 
-                    <DragOverlay>
-                        <div className="border-2 border-button bg-white px-4 py-3 rounded-lg">
-                            <p>Dragging task</p>
+                    <DragDropProvider
+                        onDragEnd={(event) => {
+                            const next = move(taskList, event);
+                            updateTaskOrder(next);
+                        }}
+                    >
+                        <div className="h-100 rounded-lg border p-2 flex-col flex gap-2">
+                            {taskList.length !== 0 ? (
+                                taskList.map((task, index) => (
+                                    <SortableTask
+                                        key={task.id}
+                                        id={task.id}
+                                        index={index}
+                                        task={task}
+                                    />
+                                ))
+                            ) : (
+                                <div className="w-full text-center p-4 font-semibold text-sm">
+                                    No task currently listed, start creating new
+                                    task and track your progress!!
+                                </div>
+                            )}
                         </div>
-                    </DragOverlay>
-                </DragDropProvider>
-            </div>
 
-            <div className="flex gap-3 justify-end">
-                <Button
-                    icon={X}
-                    customClass="bg-gray-400 text-white"
-                    onClick={() => navigate(-1)}
-                >
-                    Close
-                </Button>
-                <Button icon={Save} customClass="bg-button text-white">
-                    Save
-                </Button>
-            </div>
-        </aside>
+                        <DragOverlay>
+                            <div className="border-2 border-button bg-white px-4 py-3 rounded-lg">
+                                <p>Dragging task</p>
+                            </div>
+                        </DragOverlay>
+                    </DragDropProvider>
+                </div>
+            </SheetContent>
+        </Sheet>
     );
 }
 
@@ -171,7 +234,7 @@ function SortableTask({ id, index, task }) {
     return (
         <label
             ref={ref}
-            className={`bg-white h-12 p-2 flex items-center gap-3 rounded-lg has-checked:opacity-70 hover:scale-102 transition-all cursor-grab justify-between ${isDragging && "opacity-50"}`}
+            className={`border h-12 p-2 flex items-center gap-3 rounded-lg has-checked:opacity-70 hover:scale-102 transition-all cursor-grab justify-between ${isDragging && "opacity-50"}`}
         >
             <div className="flex gap-3">
                 <Checkbox
@@ -184,7 +247,7 @@ function SortableTask({ id, index, task }) {
                 </span>
             </div>
             <button onClick={() => db.task.delete(id)}>
-                <Trash size={15} />
+                <Minus size={16} />
             </button>
         </label>
     );
