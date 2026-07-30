@@ -18,6 +18,7 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "../../ui/collapsible";
+import { useModal } from "../../../store";
 
 function Sidebar() {
     const navigate = useNavigate();
@@ -136,6 +137,7 @@ function Workspace({
     isCollapse: boolean;
     setCollapse: Dispatch<SetStateAction<boolean>>;
 }) {
+    const { openModal } = useModal();
     const collectionsTree = useLiveQuery(async () => {
         const parentFolder = await db.collections.toArray();
 
@@ -174,7 +176,7 @@ function Workspace({
                     />
                     {!isCollapse && <p className="text-[14px]">Workspace</p>}
                 </div>
-                <Plus size={14} />
+                <Plus size={14} onClick={() => openModal("new-collections")} />
             </CollapsibleTrigger>
 
             {/* Projects List */}
@@ -187,11 +189,26 @@ function Workspace({
                             exit={{ y: -5, opacity: 0 }}
                             transition={{ delay: index * 0.1 }}
                         >
-                            <CollapsibleTrigger className="flex gap-2 items-center p-2 ml-4">
-                                <File size={14} />
-                                <p className="text-[14px]">
-                                    {project.collectionName}
-                                </p>
+                            <CollapsibleTrigger className="group hover:bg-gray-200 transition-all px-2 rounded-lg flex justify-between w-full">
+                                <div className="flex gap-2 items-center p-2 ml-4">
+                                    <File size={14} />
+                                    <p className="text-[14px]">
+                                        {project.collectionName}
+                                    </p>
+                                </div>
+                                <button>
+                                    <Plus
+                                        className="hidden group-hover:block"
+                                        size={13}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            openModal(
+                                                "new-project",
+                                                project.id,
+                                            );
+                                        }}
+                                    />
+                                </button>
                             </CollapsibleTrigger>
 
                             {/* Project children list */}

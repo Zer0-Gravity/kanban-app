@@ -129,7 +129,7 @@ function ManageTag() {
                     <h1 className="font-bold text-[50px]">Manage Tag</h1>
                     <Tags size={40} />
                 </div>
-                <p className="max-w-150">
+                <p className="max-w-150 text-[14px]">
                     Give your projects some color! Manage your global tags here
                     to easily categorize your workflow
                 </p>

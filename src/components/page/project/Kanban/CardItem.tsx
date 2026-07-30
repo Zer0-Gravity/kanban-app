@@ -31,6 +31,8 @@ function CardItem({ card, index, columnId }: CardType) {
         end: card.deadlineDate,
     });
 
+    console.log(deadlineDuration);
+
     if (!tags) return;
 
     return (
@@ -54,7 +56,9 @@ function CardItem({ card, index, columnId }: CardType) {
                 </div>
                 <MoreHorizontal size={14} />
             </div>
-            <p className="text-[14px] font-semibold mt-3">{card.cardName}</p>
+            <p className="text-[14px] font-semibold mt-3 truncate">
+                {card.cardName}
+            </p>
             <p className="truncate text-sm text-[12px]">
                 {card.description || "No Description"}
             </p>
@@ -67,7 +71,7 @@ function CardItem({ card, index, columnId }: CardType) {
             <p className="flex justify-end text-[12px]">Progress 4/7</p>
             <div className="flex gap-2 items-center text-red-600">
                 <CalendarFold size={10} />
-                <p className="text-[12px]">{`${formatDuration(deadlineDuration, { format: ["days"] })} remaining`}</p>
+                <p className="text-[12px]">{`${formatDuration(deadlineDuration, { format: ["days", "hours"] })} remaining`}</p>
             </div>
         </Link>
     );

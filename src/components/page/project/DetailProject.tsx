@@ -94,7 +94,7 @@ function DetailProject() {
                             ref={titleRef}
                             type="text"
                             value={dbData.cardName}
-                            className="text-[30px] outline-none w-70 pointer-events-none cursor-default caret-amber-400"
+                            className="text-[30px] outline-none w-70 pointer-events-none cursor-default caret-amber-400 font-bold"
                             onChange={(e) =>
                                 db.cards.update(cardId, {
                                     cardName: e.target.value,
@@ -200,10 +200,10 @@ function DetailProject() {
                                     />
                                 ))
                             ) : (
-                                <div className="w-full text-center p-4 font-semibold text-sm">
+                                <p className="w-full text-center p-4 font-medium text-[14px]">
                                     No task currently listed, start creating new
                                     task and track your progress!!
-                                </div>
+                                </p>
                             )}
                         </div>
 
