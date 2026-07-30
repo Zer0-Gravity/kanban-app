@@ -15,7 +15,7 @@ import { useNavigate, useParams } from "react-router";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
 import { useSortable } from "@dnd-kit/react/sortable";
-import { format, formatDuration, intervalToDuration } from "date-fns";
+import { format, intervalToDuration } from "date-fns";
 import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
 import type { Task } from "../../../type";
 import { move } from "@dnd-kit/helpers";
@@ -23,6 +23,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../../ui/sheet";
 import { Separator } from "@base-ui/react";
 import { PriorityDetail } from "../utilityComponent/PriorityTags";
 import { useRef } from "react";
+import { durationLeft, urgent } from "../../../utils";
 
 function DetailProject() {
     const { openModal } = useModal();
@@ -78,6 +79,8 @@ function DetailProject() {
             console.log(error);
         }
     }
+
+    const { isUrgent } = urgent(deadlineDuration);
     return (
         <Sheet
             open={true}
@@ -117,16 +120,13 @@ function DetailProject() {
                         <span className="text-[12px]">{`Created ${format(dbData.createdAt, "PPP")}`}</span>
                     </p>
                     <div className="flex justify-between">
-                        <p className="text-red-400 flex gap-3 items-center">
+                        <p
+                            className={`flex gap-3 items-center ${isUrgent && "text-red-500"}`}
+                        >
                             <Flag size={14} />
 
                             {/* Format the deadline day duration using date-fns library display it to hours and days */}
-                            <span className="text-[12px]">{`Deadline in ${formatDuration(
-                                deadlineDuration,
-                                {
-                                    format: ["days"],
-                                },
-                            )}`}</span>
+                            <span className="text-[12px]">{`${durationLeft(deadlineDuration)}`}</span>
                         </p>
 
                         <div className="flex gap-2">

@@ -1,6 +1,6 @@
 import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
 import KanbanColumn from "./KanbanColumn";
-import { Columns2, Paperclip, Plus } from "lucide-react";
+import { Columns2, PackageOpen, Paperclip, Plus } from "lucide-react";
 import { useModal } from "../../../../store";
 import { db } from "../../../../db";
 import { move } from "@dnd-kit/helpers";
@@ -146,16 +146,26 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
                 </div>
 
                 <div className="flex flex-1 gap-4 py-3 scrollbar-custom min-h-0 overflow-x-auto overflow-y-hidden">
-                    {columns.map((col, index) => {
-                        return (
-                            <KanbanColumn
-                                key={col.id}
-                                index={index}
-                                column={col}
-                                cards={cardByColumn[col.id] || []}
-                            />
-                        );
-                    })}
+                    {columns.length !== 0 ? (
+                        columns.map((col, index) => {
+                            return (
+                                <KanbanColumn
+                                    key={col.id}
+                                    index={index}
+                                    column={col}
+                                    cards={cardByColumn[col.id] || []}
+                                />
+                            );
+                        })
+                    ) : (
+                        <div className="border-2 border-dashed w-full h-40 rounded-lg flex gap-2 justify-center items-center">
+                            <PackageOpen />
+                            <p className="font-semibold">
+                                Looks like there's no work here yet. Let's
+                                change that!
+                            </p>
+                        </div>
+                    )}
                 </div>
 
                 <DragOverlay>

@@ -1,4 +1,4 @@
-import { CalendarFold, Clock, MoreHorizontal } from "lucide-react";
+import { CalendarFold, Clock, Minus } from "lucide-react";
 import type { Card } from "../../../../type";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { intervalToDuration } from "date-fns";
@@ -35,6 +35,17 @@ function CardItem({ card, index, columnId }: CardType) {
     //Flag for the card nearing deadline or already pass the deadline
     const { isUrgent } = urgent(deadlineDuration);
 
+    async function handleDeleteCard() {
+        try {
+            await Promise.all([
+                db.cards.delete(card.id),
+                db.task.where("cardId").equals(card.id).delete(),
+            ]);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     if (!tags) return;
 
     return (
@@ -57,7 +68,15 @@ function CardItem({ card, index, columnId }: CardType) {
                     <PriorityTags>{card.priority}</PriorityTags>
                 </div>
                 {isUrgent && <Clock size={14} color="red" />}
-                <MoreHorizontal size={14} />
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleDeleteCard();
+                    }}
+                >
+                    <Minus size={14} />
+                </button>
             </div>
             <p className="text-[14px] font-semibold mt-3 truncate">
                 {card.cardName}
