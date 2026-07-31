@@ -20,9 +20,9 @@ export default function Button({
         <button
             type={type ? type : "button"}
             onClick={onClick}
-            className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg ${customClass} active:scale-95 transition-all`}
+            className={`flex items-center text-[14px] gap-2.5 px-2 py-2 rounded-lg ${customClass} active:scale-95 transition-all`}
         >
-            <Icon size={20} />
+            <Icon size={14} />
             <span className="font-semibold!">{children}</span>
         </button>
     );

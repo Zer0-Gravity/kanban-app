@@ -7,7 +7,6 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../../db";
 import PriorityTags from "../../utilityComponent/PriorityTags";
 import { durationLeft, urgent } from "../../../../utils";
-import { useState } from "react";
 
 interface CardType {
     card: Card;
