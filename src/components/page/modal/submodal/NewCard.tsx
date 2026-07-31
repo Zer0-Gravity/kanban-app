@@ -25,7 +25,7 @@ import {
 import CustomTextArea from "../../utilityComponent/CustomTextArea";
 import { Popover, PopoverContent, PopoverTrigger } from "../../../ui/popover";
 import { Calendar } from "../../../ui/calendar";
-import { format } from "date-fns";
+import { format, startOfDay } from "date-fns";
 import { db } from "../../../../db";
 import { useModal } from "../../../../store";
 import { useEffect, useState } from "react";
@@ -144,6 +144,16 @@ function NewCard() {
                                         mode="single"
                                         selected={field.value}
                                         onSelect={field.onChange}
+                                        disabled={(day) =>
+                                            day < startOfDay(new Date())
+                                        }
+                                        classNames={{
+                                            disabled:
+                                                "pointer-event-none line-through",
+                                            selected:
+                                                "bg-button text-white rounded-full",
+                                            today: "bg-gray-300 rounded-full",
+                                        }}
                                     />
                                 </PopoverContent>
                             </Popover>

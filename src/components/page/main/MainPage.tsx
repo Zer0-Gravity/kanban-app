@@ -21,7 +21,7 @@ function MainPage() {
     if (!dbProject) return;
 
     return (
-        <main className="w-full md:w-[650px] space-y-5 p-3">
+        <main className="w-full md:w-162.5 space-y-5 p-3">
             <div className="flex items-center">
                 <img
                     src="/logo-kanban.svg"
