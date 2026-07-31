@@ -9,7 +9,7 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import { useState, type Dispatch, type SetStateAction } from "react";
-import { NavLink, useNavigate } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import { motion, spring } from "motion/react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
@@ -20,9 +20,42 @@ import {
 } from "../../ui/collapsible";
 import { useModal } from "../../../store";
 
+interface DataType {
+    id: string;
+    name: string;
+}
+
 function Sidebar() {
     const navigate = useNavigate();
     const [isCollapse, setIsCollapse] = useState<boolean>(false);
+    const [search, setSearch] = useState<string>("");
+
+    const dbData = useLiveQuery(async () => {
+        const dbProjects = await db.projects.toArray();
+
+        //Map the data to get only the name and id
+        const mappedProjects: DataType[] = dbProjects.map((p) => ({
+            id: p.id,
+            name: p.projectName,
+        }));
+
+        return [...mappedProjects];
+    });
+
+    //Search function
+    function searchFilter() {
+        if (!dbData) return;
+
+        //Search the data based on the search state
+        const filterProject = dbData.filter((data) =>
+            data.name.toLowerCase().includes(search.toLowerCase()),
+        );
+
+        return filterProject;
+    }
+
+    //destructure the function
+    const filterProject = searchFilter();
 
     return (
         <motion.main
@@ -67,13 +100,42 @@ function Sidebar() {
             <div className="border-2 relative h-11.25 rounded-lg mt-7.5 text-[14px]">
                 <input
                     type="text"
+                    value={search}
                     className="w-full h-full pl-10 pr-4 outline-none"
+                    placeholder="Search anything..."
+                    onChange={(e) => setSearch(e.target.value)}
                 />
                 <Search
                     size={14}
                     className="absolute left-3 top-1/2 -translate-y-1/2"
                     onClick={() => setIsCollapse(false)}
                 />
+
+                {/* Check if search isn't empty string   */}
+                {search && (
+                    <div className="border w-full max-h-50 translate-y-3 p-2 rounded-lg bg-white">
+                        <div className="flex flex-col gap-3">
+                            {filterProject.length !== 0 ? (
+                                filterProject.map((p) => (
+                                    <Link
+                                        to={`project/${[p.id]}`}
+                                        onClick={() => {
+                                            setSearch("");
+                                        }}
+                                        className="flex gap-2 items-center hover:bg-slate-300 p-1 rounded-md"
+                                    >
+                                        <File size={12} />
+                                        <p className="text-[12px]">{p.name}</p>
+                                    </Link>
+                                ))
+                            ) : (
+                                <p className="text-[12px] p-2">
+                                    No project match
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
 
             <div className="mt-8 space-y-5">
@@ -119,7 +181,7 @@ function Navigation({
         <NavLink
             to={`${link}`}
             className={({ isActive }) =>
-                `flex gap-2 items-center p-3 rounded-lg ${isActive ? "bg-button text-white" : null} ${isCollapse && "justify-center"}`
+                `flex gap-2 items-center p-3 rounded-lg ${isActive ? "underline font-semibold" : null} ${isCollapse && "justify-center"}`
             }
         >
             <Icon size={16} />
