@@ -1,5 +1,4 @@
 import { Controller, FormProvider, useForm } from "react-hook-form";
-import HeaderModal from "../../utilityComponent/HeaderModal";
 import ModalContainer from "../../utilityComponent/ModalContainer";
 import CustomInputField from "../../utilityComponent/CustomInputField";
 import {
@@ -93,9 +92,11 @@ function NewCard() {
     }
 
     return (
-        <ModalContainer>
-            <HeaderModal title="New Card" />
-
+        <ModalContainer
+            address="new-card"
+            title="Create Card"
+            descriptions="Create a new card for your workflow"
+        >
             <FormProvider {...method}>
                 <form
                     onSubmit={method.handleSubmit(handleNewCard)}
@@ -128,10 +129,12 @@ function NewCard() {
                                         {field.value ? (
                                             format(field.value, "PPPP")
                                         ) : (
-                                            <span>Set deadline date...</span>
+                                            <span className="text-[14px]">
+                                                Set deadline date...
+                                            </span>
                                         )}
                                         <Calendar1
-                                            size={20}
+                                            size={16}
                                             className="absolute left-4 top-1/2 -translate-y-1/2"
                                         />
                                     </button>
@@ -183,7 +186,7 @@ function NewCard() {
                                         />
 
                                         <TagsIcon
-                                            size={20}
+                                            size={16}
                                             className="absolute left-4 top-1/2 -translate-y-1/2"
                                         />
                                     </div>

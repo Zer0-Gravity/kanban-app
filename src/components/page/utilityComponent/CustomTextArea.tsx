@@ -28,11 +28,11 @@ function CustomTextArea({
                         <div className="relative text-foreground-muted-primary">
                             <textarea
                                 {...field}
-                                className="bg-foreground-muted-secondary pl-15 py-4 pr-5 w-full min-h-50 rounded-xl outline-none focus-visible:ring-1 scrollbar-custom"
+                                className="bg-foreground-muted-secondary text-[14px] pl-15 py-4 pr-5 w-full h-50 resize-none rounded-xl outline-none focus-visible:ring-2 scrollbar-custom"
                                 placeholder={placeholder}
                             />
                             <Icon
-                                size={20}
+                                size={16}
                                 className="absolute left-5 top-1/7 -translate-y-1/2"
                             />
                         </div>

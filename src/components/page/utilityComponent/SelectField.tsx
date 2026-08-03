@@ -54,7 +54,7 @@ function SelectField({
                                 value={field.value}
                                 onValueChange={field.onChange}
                             >
-                                <SelectTrigger className="bg-foreground-muted-secondary pl-15 pr-5 w-full h-14! rounded-lg outline-none border-none focus-visible:ring-1">
+                                <SelectTrigger className="bg-foreground-muted-secondary text-[14px]! pl-15 pr-5 w-full h-14! rounded-lg outline-none border-none focus-visible:ring-1">
                                     <SelectValue placeholder={placeholder} />
                                 </SelectTrigger>
                                 <SelectContent
@@ -84,7 +84,7 @@ function SelectField({
                             </Select>
 
                             <Icon
-                                size={20}
+                                size={14}
                                 className="absolute left-4 top-1/2 -translate-y-1/2"
                             />
                         </div>

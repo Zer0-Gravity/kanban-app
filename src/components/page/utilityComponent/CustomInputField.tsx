@@ -1,4 +1,4 @@
-import type { LucideIcon } from "lucide-react";
+import { AlertCircle, type LucideIcon } from "lucide-react";
 import { Controller, useFormContext } from "react-hook-form";
 
 interface CustomInputType {
@@ -23,22 +23,29 @@ function CustomInputField({
             <Controller
                 name={name}
                 control={control}
-                render={({ field }) => (
-                    <div className="space-y-3">
-                        <p className="font-semibold">{label}</p>
+                render={({ field, fieldState: { error } }) => (
+                    <div className="space-y-2">
+                        <p className="font-semibold text-[14px]">{label}</p>
 
                         <div className="relative text-foreground-muted-primary">
                             <input
                                 {...field}
                                 type={type ? type : "text"}
-                                className="bg-foreground-muted-secondary pl-15 py-4 pr-5 w-full rounded-xl outline-none focus-visible:ring-1"
+                                className="bg-foreground-muted-secondary pl-15 h-11.25 w-full text-[14px] rounded-md outline-none focus-visible:ring-2"
                                 placeholder={placeholder}
+                                autoComplete="off"
                             />
                             <Icon
-                                size={20}
+                                size={14}
                                 className="absolute left-5 top-1/2 -translate-y-1/2"
                             />
                         </div>
+                        {error && (
+                            <p className="text-red-500 font-medium flex gap-2 items-center">
+                                <AlertCircle size={14} />
+                                {error.message}
+                            </p>
+                        )}
                     </div>
                 )}
             />
