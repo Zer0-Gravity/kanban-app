@@ -31,7 +31,7 @@ function CustomInputField({
                             <input
                                 {...field}
                                 type={type ? type : "text"}
-                                className="bg-foreground-muted-secondary pl-15 h-11.25 w-full text-[14px] rounded-md outline-none focus-visible:ring-2"
+                                className="custom-input"
                                 placeholder={placeholder}
                                 autoComplete="off"
                             />

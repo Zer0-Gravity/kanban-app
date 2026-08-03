@@ -1,5 +1,4 @@
 import { FormProvider, useForm } from "react-hook-form";
-import HeaderModal from "../../utilityComponent/HeaderModal";
 import CustomInputField from "../../utilityComponent/CustomInputField";
 import { Clipboard, Save } from "lucide-react";
 import ColorPicker from "../../utilityComponent/ColorPicker";
@@ -30,9 +29,7 @@ function NewBoard() {
     }
 
     return (
-        <ModalContainer>
-            <HeaderModal title="New Board" />
-
+        <ModalContainer address="new-board" title="Create column">
             <FormProvider {...method}>
                 <form
                     onSubmit={method.handleSubmit(handleNewColumn)}

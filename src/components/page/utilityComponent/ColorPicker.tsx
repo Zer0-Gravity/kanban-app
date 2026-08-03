@@ -18,12 +18,12 @@ function ColorPicker({ theme }: { theme?: string }) {
                         <HexColorInput
                             color={field.value}
                             onChange={field.onChange}
-                            className="bg-foreground-muted-secondary pl-15 py-4 pr-20 w-full rounded-xl outline-none"
+                            className="custom-input"
                             placeholder="Pick a color (Optional)"
                         />
 
                         <Palette
-                            size={20}
+                            size={16}
                             className="absolute left-5 top-1/2 -translate-y-1/2"
                         />
 
