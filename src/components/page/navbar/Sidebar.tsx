@@ -2,6 +2,7 @@ import {
     File,
     HardDrive,
     Home,
+    Minus,
     Plus,
     Search,
     SidebarClose,
@@ -102,7 +103,7 @@ function Sidebar() {
                     type="text"
                     value={search}
                     className="w-full h-full pl-10 pr-4 outline-none"
-                    placeholder="Search anything..."
+                    placeholder="Search project..."
                     onChange={(e) => setSearch(e.target.value)}
                 />
                 <Search
@@ -221,6 +222,50 @@ function Workspace({
         return Promise.all(childContentPromise);
     });
 
+    async function deleteProject(id: string) {
+        try {
+            //Wrap everything into transactions
+            await db.transaction(
+                "rw",
+                [db.projects, db.columns, db.cards, db.task],
+                async () => {
+                    // Get the columns data and id
+                    const columns = await db.columns
+                        .where("projectId")
+                        .equals(id)
+                        .toArray();
+                    const colId = columns.map((col) => col.id);
+
+                    if (colId.length > 0) {
+                        //if column id not empty get the data and id card
+                        const cards = await db.cards
+                            .where("columnId")
+                            .anyOf(colId)
+                            .toArray();
+                        const cardId = cards.map((card) => card.id);
+
+                        if (cardId.length > 0) {
+                            //Get the task data
+                            await db.task
+                                .where("cardId")
+                                .anyOf(cardId)
+                                .delete();
+                        }
+
+                        //Delete the children data
+                        await db.cards.where("columnId").anyOf(colId).delete();
+                        await db.columns.where("projectId").equals(id).delete();
+                    }
+
+                    //Delete tge parent data
+                    await db.projects.delete(id);
+                },
+            );
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     if (!collectionsTree) {
         return;
     }
@@ -238,7 +283,13 @@ function Workspace({
                     />
                     {!isCollapse && <p className="text-[14px]">Workspace</p>}
                 </div>
-                <Plus size={14} onClick={() => openModal("new-collections")} />
+                <Plus
+                    size={14}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        openModal("new-collections");
+                    }}
+                />
             </CollapsibleTrigger>
 
             {/* Projects List */}
@@ -282,16 +333,24 @@ function Workspace({
                                         animate={{ y: 0, opacity: 1 }}
                                         exit={{ y: -5, opacity: 0 }}
                                         transition={{ delay: index * 0.1 }}
+                                        className="flex justify-between items-center"
                                     >
                                         <NavLink
                                             key={file.id}
                                             to={`/project/${file.id}`}
                                             className={({ isActive }) =>
-                                                `text-[14px] ml-12 ${isActive ? "underline font-semibold" : null}`
+                                                `text-[14px] ml-12  ${isActive ? "underline font-semibold" : null}`
                                             }
                                         >
                                             {file.projectName}
                                         </NavLink>
+                                        <button
+                                            onClick={() =>
+                                                deleteProject(file.id)
+                                            }
+                                        >
+                                            <Minus size={13} />
+                                        </button>
                                     </MotionCollapse>
                                 ))}
                             </CollapsibleContent>
