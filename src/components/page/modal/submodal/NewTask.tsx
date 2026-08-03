@@ -1,4 +1,3 @@
-import HeaderModal from "../../utilityComponent/HeaderModal";
 import { FormProvider, useForm } from "react-hook-form";
 import CustomInputField from "../../utilityComponent/CustomInputField";
 import { ClipboardCheck, Save } from "lucide-react";
@@ -28,9 +27,11 @@ function NewTask() {
     }
 
     return (
-        <ModalContainer>
-            <HeaderModal title="New Task" />
-
+        <ModalContainer
+            address="new-task"
+            title="Create Task"
+            descriptions="Create task for your card and track your progress"
+        >
             <FormProvider {...method}>
                 <form
                     onSubmit={method.handleSubmit(handleNewTask)}

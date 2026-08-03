@@ -1,6 +1,5 @@
 import { FormProvider, useForm } from "react-hook-form";
 import ModalContainer from "../../utilityComponent/ModalContainer";
-import HeaderModal from "../../utilityComponent/HeaderModal";
 import CustomInputField from "../../utilityComponent/CustomInputField";
 import { File, Save, TextInitial } from "lucide-react";
 import Button from "../../utilityComponent/Button";
@@ -30,9 +29,7 @@ function NewProject() {
     }
 
     return (
-        <ModalContainer>
-            <HeaderModal title="Create Project" />
-
+        <ModalContainer address="new-project" title="Create Project">
             <FormProvider {...method}>
                 <form
                     onSubmit={method.handleSubmit(handleNewProject)}

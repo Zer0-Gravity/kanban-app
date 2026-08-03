@@ -1,5 +1,4 @@
 import ModalContainer from "../../utilityComponent/ModalContainer";
-import HeaderModal from "../../utilityComponent/HeaderModal";
 import { FormProvider, useForm } from "react-hook-form";
 import CustomInputField from "../../utilityComponent/CustomInputField";
 
@@ -29,9 +28,11 @@ function NewTag() {
     }
 
     return (
-        <ModalContainer>
-            <HeaderModal title="New Tag" />
-
+        <ModalContainer
+            address="new-tag"
+            title="Create Tag"
+            descriptions="Create new tag to organize your work!"
+        >
             <FormProvider {...method}>
                 <form
                     onSubmit={method.handleSubmit(handleNewTag)}

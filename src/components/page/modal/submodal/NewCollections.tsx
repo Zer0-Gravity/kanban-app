@@ -1,8 +1,6 @@
 import { Folder, Save } from "lucide-react";
 import Button from "../../utilityComponent/Button";
-import HeaderModal from "../../utilityComponent/HeaderModal";
 import ModalContainer from "../../utilityComponent/ModalContainer";
-
 import { FormProvider, useForm } from "react-hook-form";
 import CustomInputField from "../../utilityComponent/CustomInputField";
 import ColorPicker from "../../utilityComponent/ColorPicker";
@@ -31,9 +29,7 @@ function NewCollections() {
     }
 
     return (
-        <ModalContainer>
-            <HeaderModal title="New Collections" />
-
+        <ModalContainer address="new-collections" title="Create Workspace">
             <FormProvider {...method}>
                 <form
                     onSubmit={method.handleSubmit(handleNewCollections)}
