@@ -50,7 +50,7 @@ function Sidebar() {
                 transition: { type: spring, damping: 20, stiffness: 250 },
                 width: isCollapse ? "65px" : "270px",
             }}
-            className="h-full rounded-r-lg p-3"
+            className="h-full w-67.5 rounded-r-lg p-3"
         >
             <header
                 className={`flex gap-2 items-center ${isCollapse ? "justify-center" : "justify-between"}`}

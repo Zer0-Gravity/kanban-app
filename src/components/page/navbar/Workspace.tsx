@@ -7,7 +7,7 @@ import {
 import { useModal } from "../../../store";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
-import type { Dispatch, SetStateAction } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import {
     File,
     HardDrive,
@@ -22,7 +22,6 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuTrigger,
 } from "../../ui/dropdown-menu";
 
@@ -148,9 +147,15 @@ export function Workspace({
                                     className="flex gap-2 items-center p-2 ml-4"
                                 >
                                     <File size={14} />
-                                    <p className="text-[14px]">
-                                        {project.collectionName}
-                                    </p>
+                                    <input
+                                        className="text-[14px] w-20  p-0.5 "
+                                        value={project.collectionName}
+                                        onChange={(e) =>
+                                            db.collections.update(project.id, {
+                                                collectionName: e.target.value,
+                                            })
+                                        }
+                                    />
                                 </div>
                                 <DropdownWorkspace id={project.id} />
                             </CollapsibleTrigger>
@@ -269,19 +274,19 @@ function DropdownWorkspace({ id }: { id: string }) {
             />
             <DropdownMenuContent className="bg-white ring-0">
                 <DropdownMenuItem className="hover:bg-gray-200">
-                    <button className="flex gap-2">
-                        <Plus size={13} />
-                        <span className="text-[13px]">Create</span>
-                    </button>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="hover:bg-gray-200">
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
                             openModal("new-project", id);
                         }}
-                        className="flex gap-2"
+                        className="flex gap-2 w-full"
                     >
+                        <Plus size={13} />
+                        <span className="text-[13px]">Create</span>
+                    </button>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="hover:bg-gray-200">
+                    <button className="flex gap-2 w-full">
                         <Pen size={13} />
                         <span className="text-[13px]">Rename</span>
                     </button>
@@ -289,7 +294,7 @@ function DropdownWorkspace({ id }: { id: string }) {
                 <DropdownMenuItem className="hover:bg-gray-200">
                     <button
                         onClick={deleteWorkspace}
-                        className="flex gap-2 text-red-500"
+                        className="flex gap-2 w-full text-red-500"
                     >
                         <Trash size={13} />
                         <span className="text-[13px]">Delete</span>
