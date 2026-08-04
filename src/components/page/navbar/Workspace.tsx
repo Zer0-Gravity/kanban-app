@@ -8,8 +8,23 @@ import { useModal } from "../../../store";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
 import type { Dispatch, SetStateAction } from "react";
-import { File, HardDrive, Minus, Plus } from "lucide-react";
+import {
+    File,
+    HardDrive,
+    Minus,
+    MoreHorizontal,
+    Pen,
+    Plus,
+    Trash,
+} from "lucide-react";
 import { NavLink, useNavigate } from "react-router";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger,
+} from "../../ui/dropdown-menu";
 
 const MotionCollapse = motion.create(Collapsible);
 
@@ -137,19 +152,7 @@ export function Workspace({
                                         {project.collectionName}
                                     </p>
                                 </div>
-                                <button>
-                                    <Plus
-                                        className="hidden group-hover:block"
-                                        size={13}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            openModal(
-                                                "new-project",
-                                                project.id,
-                                            );
-                                        }}
-                                    />
-                                </button>
+                                <DropdownWorkspace id={project.id} />
                             </CollapsibleTrigger>
 
                             {/* Project children list */}
@@ -187,5 +190,112 @@ export function Workspace({
                     </CollapsibleContent>
                 ))}
         </Collapsible>
+    );
+}
+
+function DropdownWorkspace({ id }: { id: string }) {
+    const { openModal } = useModal();
+    const navigate = useNavigate();
+
+    async function deleteWorkspace() {
+        try {
+            await db.transaction(
+                "rw",
+                [db.collections, db.projects, db.columns, db.cards, db.task],
+                async () => {
+                    //Get the project database and ID
+                    const projects = await db.projects
+                        .where("collectionsId")
+                        .equals(id)
+                        .toArray();
+                    const proId = projects.map((p) => p.id);
+
+                    if (proId.length > 0) {
+                        //Get the columns id and database
+                        const columns = await db.columns
+                            .where("projectId")
+                            .anyOf(proId)
+                            .toArray();
+                        const colId = columns.map((col) => col.id);
+
+                        if (colId.length > 0) {
+                            //Get the card id and database
+                            const cards = await db.cards
+                                .where("columnId")
+                                .anyOf(colId)
+                                .toArray();
+                            const cardId = cards.map((card) => card.id);
+
+                            if (cardId.length > 0) {
+                                //Get the task data
+                                await db.task
+                                    .where("cardId")
+                                    .anyOf(cardId)
+                                    .delete();
+                            }
+
+                            //Delete the children data
+                            await db.cards
+                                .where("columnId")
+                                .anyOf(colId)
+                                .delete();
+                            await db.columns
+                                .where("projectId")
+                                .anyOf(proId)
+                                .delete();
+                        }
+
+                        await db.projects.where("id").anyOf(proId).delete();
+                    }
+
+                    await db.collections.delete(id);
+                },
+            );
+
+            navigate("/");
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger
+                render={
+                    <button onClick={(e) => e.stopPropagation()}>
+                        <MoreHorizontal size={13} />
+                    </button>
+                }
+            />
+            <DropdownMenuContent className="bg-white ring-0">
+                <DropdownMenuItem className="hover:bg-gray-200">
+                    <button className="flex gap-2">
+                        <Plus size={13} />
+                        <span className="text-[13px]">Create</span>
+                    </button>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="hover:bg-gray-200">
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            openModal("new-project", id);
+                        }}
+                        className="flex gap-2"
+                    >
+                        <Pen size={13} />
+                        <span className="text-[13px]">Rename</span>
+                    </button>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="hover:bg-gray-200">
+                    <button
+                        onClick={deleteWorkspace}
+                        className="flex gap-2 text-red-500"
+                    >
+                        <Trash size={13} />
+                        <span className="text-[13px]">Delete</span>
+                    </button>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 }
