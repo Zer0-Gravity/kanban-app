@@ -46,7 +46,7 @@ function MainPage() {
                     icon={File}
                     onClick={() => openModal("new-collections")}
                 >
-                    Create Board
+                    Create Workspace
                 </Button>
             </div>
             <div className="space-y-3">

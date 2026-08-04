@@ -9,7 +9,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
 import type { Dispatch, SetStateAction } from "react";
 import { File, HardDrive, Minus, Plus } from "lucide-react";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 
 const MotionCollapse = motion.create(Collapsible);
 
@@ -21,6 +21,7 @@ export function Workspace({
     setCollapse: Dispatch<SetStateAction<boolean>>;
 }) {
     const { openModal } = useModal();
+    const navigate = useNavigate();
     const collectionsTree = useLiveQuery(async () => {
         const parentFolder = await db.collections.toArray();
 
@@ -81,6 +82,8 @@ export function Workspace({
                     await db.projects.delete(id);
                 },
             );
+
+            navigate("/");
         } catch (error) {
             console.log(error);
         }
@@ -123,7 +126,12 @@ export function Workspace({
                             transition={{ delay: index * 0.1 }}
                         >
                             <CollapsibleTrigger className="group hover:bg-gray-200 transition-all px-2 rounded-lg flex justify-between w-full">
-                                <div className="flex gap-2 items-center p-2 ml-4">
+                                <div
+                                    style={{
+                                        color: `${project.collectionsTheme}`,
+                                    }}
+                                    className="flex gap-2 items-center p-2 ml-4"
+                                >
                                     <File size={14} />
                                     <p className="text-[14px]">
                                         {project.collectionName}

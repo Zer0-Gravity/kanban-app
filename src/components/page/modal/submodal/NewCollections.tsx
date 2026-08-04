@@ -38,7 +38,7 @@ function NewCollections() {
                     <CustomInputField
                         icon={Folder}
                         name="collectionName"
-                        label="Collections Name"
+                        label="Workspace name"
                         placeholder="Collections Name"
                     />
 
