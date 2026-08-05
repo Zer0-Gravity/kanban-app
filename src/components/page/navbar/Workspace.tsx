@@ -148,7 +148,7 @@ export function Workspace({
                                 >
                                     <File size={14} />
                                     <input
-                                        className="text-[14px] w-20  p-0.5 "
+                                        className="text-[14px] w-20  p-0.5 pointer-events-none"
                                         value={project.collectionName}
                                         onChange={(e) =>
                                             db.collections.update(project.id, {
@@ -161,7 +161,7 @@ export function Workspace({
                             </CollapsibleTrigger>
 
                             {/* Project children list */}
-                            <CollapsibleContent>
+                            <CollapsibleContent className="space-y-2">
                                 {project.project.map((file) => (
                                     <MotionCollapse
                                         key={file.id}
@@ -169,25 +169,25 @@ export function Workspace({
                                         animate={{ y: 0, opacity: 1 }}
                                         exit={{ y: -5, opacity: 0 }}
                                         transition={{ delay: index * 0.1 }}
-                                        className="group flex justify-between items-center transition-all"
+                                        className="group transition-all"
                                     >
                                         <NavLink
                                             key={file.id}
                                             to={`/project/${file.id}`}
                                             className={({ isActive }) =>
-                                                `text-[14px] ml-12  ${isActive ? "underline font-semibold" : null}`
+                                                `text-[13px] ml-12  ${isActive ? "underline font-semibold" : null} flex justify-between items-center `
                                             }
                                         >
-                                            {file.projectName}
+                                            <p>{file.projectName}</p>
+                                            <button
+                                                className="hidden group-hover:block active:bg-gray-300 rounded-full"
+                                                onClick={() =>
+                                                    deleteProject(file.id)
+                                                }
+                                            >
+                                                <Minus size={13} />
+                                            </button>
                                         </NavLink>
-                                        <button
-                                            className="hidden group-hover:block"
-                                            onClick={() =>
-                                                deleteProject(file.id)
-                                            }
-                                        >
-                                            <Minus size={13} />
-                                        </button>
                                     </MotionCollapse>
                                 ))}
                             </CollapsibleContent>
