@@ -99,10 +99,10 @@ function CardItem({ card, index, columnId }: CardType) {
             <p className="text-[14px] font-semibold mt-3 truncate">
                 {card.cardName}
             </p>
-            <p className="truncate text-sm text-[12px]">
+            <p className="truncate text-sm text-[12px] text-txt-secondary">
                 {card.description || "No Description"}
             </p>
-            <div className="h-2 w-full bg-gray-300 rounded-full">
+            <div className="h-2 w-full bg-bg-secondary rounded-full">
                 <div
                     style={{
                         backgroundColor: tags.tagColor,
@@ -131,8 +131,8 @@ function CardItem({ card, index, columnId }: CardType) {
             <div
                 className={`flex gap-2 items-center ${isUrgent && "text-red-500"} }`}
             >
-                <CalendarFold size={14} />
-                <p className="text-[12px]">{`${durationLeft(deadlineDuration)}`}</p>
+                <CalendarFold size={14} className="text-txt-secondary" />
+                <p className="text-[12px] text-txt-secondary">{`${durationLeft(deadlineDuration)}`}</p>
             </div>
         </Link>
     );

@@ -28,7 +28,7 @@ function ProjectPage() {
     }
 
     return (
-        <main className="relative flex flex-col h-screen w-full px-5 justify-center pb-2 space-y-3 overflow-hidden bg-slate-300">
+        <main className="relative flex flex-col h-screen w-full px-5 justify-center pb-2 space-y-3 overflow-hidden bg-bg-primary">
             <header className="mt-8 flex justify-between">
                 <h1 className="text-[30px] font-bold">
                     {projectData.projectName}

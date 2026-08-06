@@ -50,7 +50,7 @@ function Sidebar() {
                 transition: { type: spring, damping: 20, stiffness: 250 },
                 width: isCollapse ? "65px" : "270px",
             }}
-            className="h-full w-67.5 rounded-r-lg p-3"
+            className="bg-bg-secondary h-full w-67.5 rounded-r-lg p-3"
         >
             <header
                 className={`flex gap-2 items-center ${isCollapse ? "justify-center" : "justify-between"}`}
@@ -100,7 +100,7 @@ function Sidebar() {
 
                 {/* Check if search isn't empty string   */}
                 {search && (
-                    <div className="border w-full max-h-50 translate-y-3 p-2 rounded-lg bg-white">
+                    <div className="border w-full max-h-50 translate-y-3 p-2 rounded-lg bg-bg-primary">
                         <div className="flex flex-col gap-3">
                             {filterProject.length !== 0 ? (
                                 filterProject.map((p) => (

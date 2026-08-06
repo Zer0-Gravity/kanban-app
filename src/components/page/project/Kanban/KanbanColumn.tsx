@@ -27,7 +27,7 @@ function KanbanColumn({ cards, column, index }: KanbanColumnType) {
     return (
         <div
             ref={ref}
-            className={`bg-gray-200 w-67.5 shrink-0 flex flex-col h-fit max-h-full rounded-xl ${isDragging ? "opacity-50 border border-button" : null}`}
+            className={`w-67.5 shrink-0 flex flex-col h-fit max-h-full rounded-xl ${isDragging ? "opacity-50 border border-button" : null}`}
         >
             <div
                 style={{
@@ -57,7 +57,7 @@ function KanbanColumn({ cards, column, index }: KanbanColumnType) {
                 </div>
             </div>
 
-            <div className="flex flex-col scrollbar-none gap-3 py-3 flex-1 overflow-y-auto min-h-0 items-center">
+            <div className="bg-bg-secondary rounded-b-lg flex flex-col scrollbar-none gap-3 py-3 flex-1 overflow-y-auto min-h-0 items-center">
                 {cards.map((card, index) => (
                     <CardItem
                         key={card.id}

@@ -7,7 +7,13 @@
 @import "@fontsource-variable/inter";
 
 @theme {
-    --color-button: #009cff;
+    --color-bg-primary: #f7f4ef;
+    --color-bg-secondary: #efeae2;
+    --color-card-detail: #ffffff;
+    --color-button: #ab6b05;
+    --color-txt-primary: #2a2725;
+    --color-txt-secondary: #706a65;
+    --color-divider: #e3ddd3;
     --color-foreground-muted-primary: #5d5d5d;
     --color-foreground-muted-secondary: #ededed;
 }
@@ -24,16 +30,21 @@
     }
 }
 
-p {
-    font-family: "Inter", sans-serif;
-}
+@layer base {
+    p {
+        font-family: "Inter", sans-serif;
+        color: var(--color-txt-primary);
+    }
 
-h1 {
-    font-family: "Roboto", sans-serif;
-}
+    h1 {
+        font-family: "Roboto", sans-serif;
+        color: var(--color-txt-primary);
+    }
 
-span {
-    font-family: "Inter", sans-serif;
+    span {
+        font-family: "Inter", sans-serif;
+        color: var(--color-txt-primary);
+    }
 }
 
 .scrollbar-custom::-webkit-scrollbar {
@@ -58,5 +69,5 @@ span {
     width: 100%;
     padding-left: 60px;
     border-radius: 5px;
-    background-color: var(--color-foreground-muted-secondary);
+    background-color: white;
 }

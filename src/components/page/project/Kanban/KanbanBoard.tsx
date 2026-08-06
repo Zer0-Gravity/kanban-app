@@ -138,10 +138,10 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
                 <div className="flex justify-end">
                     <button
                         onClick={() => openModal("new-board", activeProject)}
-                        className="bg-gray-200 p-2 rounded-lg flex gap-2 items-center"
+                        className="bg-button text-white p-2 rounded-lg flex gap-2 items-center"
                     >
                         <Plus size={14} />
-                        <span className="text-[14px] font-medium">Column</span>
+                        <p className="text-[14px] font-medium">Column</p>
                     </button>
                 </div>
 

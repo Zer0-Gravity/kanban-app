@@ -32,7 +32,7 @@ function ModalContainer({
                 if (!open) closeModal();
             }}
         >
-            <DialogContent className="bg-white ring-0">
+            <DialogContent className="bg-bg-secondary ring-0">
                 <DialogHeader>
                     <DialogTitle className="text-[20px] font-semibold">
                         {title}

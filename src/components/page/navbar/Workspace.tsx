@@ -92,7 +92,7 @@ export function Workspace({
                             exit={{ y: -5, opacity: 0 }}
                             transition={{ delay: index * 0.1 }}
                         >
-                            <CollapsibleTrigger className="group hover:bg-gray-200 transition-all px-2 rounded-lg flex justify-between w-full">
+                            <CollapsibleTrigger className="group transition-all px-2 rounded-lg flex justify-between w-full">
                                 <div
                                     style={{
                                         color: `${project.collectionsTheme}`,
@@ -133,7 +133,7 @@ export function Workspace({
                                         >
                                             <p>{file.projectName}</p>
                                             <button
-                                                className="hidden group-hover:block active:bg-gray-300 rounded-full"
+                                                className="hidden group-hover:block rounded-full"
                                                 onClick={() =>
                                                     openModal(
                                                         "project",
