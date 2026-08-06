@@ -1,3 +1,4 @@
+import Alert from "./Alert";
 import NewBoard from "./submodal/NewBoard";
 import NewCard from "./submodal/NewCard";
 import NewCollections from "./submodal/NewCollections";
@@ -14,6 +15,7 @@ function MainModal() {
             <NewTask />
             <NewCollections />
             <NewTag />
+            <Alert />
         </>
     );
 }

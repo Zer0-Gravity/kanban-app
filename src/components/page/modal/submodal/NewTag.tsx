@@ -9,13 +9,14 @@ import { useModal } from "../../../../store";
 import Button from "../../utilityComponent/Button";
 import ColorPicker from "../../utilityComponent/ColorPicker";
 import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const schema = yup.object({
-    tagName: yup.string().required("Tag name i required"),
+    tagName: yup.string().required("Tag name is required"),
 });
 
 function NewTag() {
-    const method = useForm();
+    const method = useForm({ resolver: yupResolver(schema) });
     const { closeModal } = useModal();
 
     async function handleNewTag(data: Tag) {

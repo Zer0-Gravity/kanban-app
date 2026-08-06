@@ -30,7 +30,7 @@ export interface Card {
     description: string;
     priority: Priority;
     createdAt: string;
-    tagId: string;
+    tagId?: string;
     order?: number;
 }
 

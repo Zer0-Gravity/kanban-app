@@ -78,7 +78,7 @@ function CardItem({ card, index, columnId }: CardType) {
             ref={ref}
             className={`rounded-lg p-3 w-62.5 space-y-2 bg-white ${isDragging && "opacity-50"} ${isUrgent && "border-2 border-red-500"}`}
         >
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
                 <div className="flex gap-3">
                     <p
                         style={{
@@ -93,6 +93,7 @@ function CardItem({ card, index, columnId }: CardType) {
                 </div>
                 {isUrgent && <Clock size={14} color="red" />}
                 <button
+                    className="active:scale-90 p-0.5 hover:bg-slate-500 rounded-full h-fit"
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
