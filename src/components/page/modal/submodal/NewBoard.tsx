@@ -7,9 +7,17 @@ import ModalContainer from "../../utilityComponent/ModalContainer";
 import type { Columns } from "../../../../type";
 import { db } from "../../../../db";
 import { useModal } from "../../../../store";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+const schema = yup
+    .object({
+        columnName: yup.string().required("Column name is required!"),
+    })
+    .required();
 
 function NewBoard() {
-    const method = useForm();
+    const method = useForm({ resolver: yupResolver(schema) });
     const { idContainer, closeModal } = useModal();
 
     async function handleNewColumn(data: Columns) {

@@ -8,6 +8,11 @@ import { db } from "../../../../db";
 import { useModal } from "../../../../store";
 import Button from "../../utilityComponent/Button";
 import ColorPicker from "../../utilityComponent/ColorPicker";
+import * as yup from "yup";
+
+const schema = yup.object({
+    tagName: yup.string().required("Tag name i required"),
+});
 
 function NewTag() {
     const method = useForm();
@@ -18,7 +23,7 @@ function NewTag() {
             await db.tag.add({
                 id: crypto.randomUUID(),
                 tagName: data.tagName,
-                tagColor: data.tagColor,
+                tagColor: data.tagColor || "#000000",
             });
 
             closeModal();

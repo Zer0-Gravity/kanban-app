@@ -7,9 +7,17 @@ import type { Projects } from "../../../../type";
 import CustomTextArea from "../../utilityComponent/CustomTextArea";
 import { db } from "../../../../db";
 import { useModal } from "../../../../store";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+const schema = yup
+    .object({
+        projectName: yup.string().required("Project name is required!"),
+    })
+    .required();
 
 function NewProject() {
-    const method = useForm();
+    const method = useForm({ resolver: yupResolver(schema) });
     const { closeModal, idContainer } = useModal();
 
     async function handleNewProject(data: Projects) {

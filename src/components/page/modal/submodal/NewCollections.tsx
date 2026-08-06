@@ -7,9 +7,21 @@ import ColorPicker from "../../utilityComponent/ColorPicker";
 import { db } from "../../../../db";
 import type { Collections } from "../../../../type";
 import { useModal } from "../../../../store";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+//Yup validator
+
+const schema = yup
+    .object({
+        collectionName: yup.string().required("Workspace name is required!"),
+    })
+    .required();
 
 function NewCollections() {
-    const method = useForm();
+    const method = useForm({
+        resolver: yupResolver(schema),
+    });
     const { closeModal } = useModal();
 
     async function handleNewCollections(data: Collections) {

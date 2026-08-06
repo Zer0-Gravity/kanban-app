@@ -6,9 +6,17 @@ import ModalContainer from "../../utilityComponent/ModalContainer";
 import type { Task } from "../../../../type";
 import { db } from "../../../../db";
 import { useModal } from "../../../../store";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+const schema = yup
+    .object({
+        taskName: yup.string().required("Task name is required!"),
+    })
+    .required();
 
 function NewTask() {
-    const method = useForm();
+    const method = useForm({ resolver: yupResolver(schema) });
     const { closeModal, idContainer } = useModal();
 
     async function handleNewTask(data: Task) {

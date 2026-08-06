@@ -31,7 +31,7 @@ function CustomInputField({
                             <input
                                 {...field}
                                 type={type ? type : "text"}
-                                className="custom-input"
+                                className={`custom-input ${error && "outline-red-500 border-red-500 border-2"}`}
                                 placeholder={placeholder}
                                 autoComplete="off"
                             />
@@ -41,7 +41,7 @@ function CustomInputField({
                             />
                         </div>
                         {error && (
-                            <p className="text-red-500 font-medium flex gap-2 items-center">
+                            <p className="text-red-500 text-[12px] flex gap-2 items-center">
                                 <AlertCircle size={14} />
                                 {error.message}
                             </p>
