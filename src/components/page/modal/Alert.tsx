@@ -16,7 +16,9 @@ function Alert() {
         modalName === "card" ||
         modalName === "column" ||
         modalName === "project" ||
-        modalName === "collections";
+        modalName === "collection";
+
+    console.log(modalName, idContainer);
 
     async function deleteItems() {
         //Delete card
@@ -53,6 +55,28 @@ function Alert() {
                     [db.projects, db.columns, db.cards, db.task],
                     async () => {
                         await db.projects.delete(idContainer);
+                    },
+                );
+                navigate("/");
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        //Delete workspace collections
+        if (modalName === "collection") {
+            try {
+                await db.transaction(
+                    "rw",
+                    [
+                        db.collections,
+                        db.projects,
+                        db.columns,
+                        db.cards,
+                        db.task,
+                    ],
+                    async () => {
+                        await db.collections.delete(idContainer);
                     },
                 );
                 navigate("/");

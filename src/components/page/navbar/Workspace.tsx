@@ -17,7 +17,7 @@ import {
     Plus,
     Trash,
 } from "lucide-react";
-import { NavLink, useNavigate } from "react-router";
+import { NavLink } from "react-router";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -156,68 +156,6 @@ export function Workspace({
 
 function DropdownWorkspace({ id }: { id: string }) {
     const { openModal } = useModal();
-    const navigate = useNavigate();
-
-    async function deleteWorkspace() {
-        try {
-            await db.transaction(
-                "rw",
-                [db.collections, db.projects, db.columns, db.cards, db.task],
-                async () => {
-                    //Get the project database and ID
-                    const projects = await db.projects
-                        .where("collectionsId")
-                        .equals(id)
-                        .toArray();
-                    const proId = projects.map((p) => p.id);
-
-                    if (proId.length > 0) {
-                        //Get the columns id and database
-                        const columns = await db.columns
-                            .where("projectId")
-                            .anyOf(proId)
-                            .toArray();
-                        const colId = columns.map((col) => col.id);
-
-                        if (colId.length > 0) {
-                            //Get the card id and database
-                            const cards = await db.cards
-                                .where("columnId")
-                                .anyOf(colId)
-                                .toArray();
-                            const cardId = cards.map((card) => card.id);
-
-                            if (cardId.length > 0) {
-                                //Get the task data
-                                await db.task
-                                    .where("cardId")
-                                    .anyOf(cardId)
-                                    .delete();
-                            }
-
-                            //Delete the children data
-                            await db.cards
-                                .where("columnId")
-                                .anyOf(colId)
-                                .delete();
-                            await db.columns
-                                .where("projectId")
-                                .anyOf(proId)
-                                .delete();
-                        }
-
-                        await db.projects.where("id").anyOf(proId).delete();
-                    }
-
-                    await db.collections.delete(id);
-                },
-            );
-
-            navigate("/");
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
     return (
         <DropdownMenu>
@@ -249,7 +187,7 @@ function DropdownWorkspace({ id }: { id: string }) {
                 </DropdownMenuItem>
                 <DropdownMenuItem className="hover:bg-gray-200">
                     <button
-                        onClick={deleteWorkspace}
+                        onClick={() => openModal("collection", id)}
                         className="flex gap-2 w-full text-red-500"
                     >
                         <Trash size={13} />
