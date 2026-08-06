@@ -28,6 +28,20 @@ function Alert() {
             }
         }
 
+        if (modalName === "column") {
+            try {
+                await db.transaction(
+                    "rw",
+                    [db.columns, db.cards, db.task],
+                    async () => {
+                        await db.columns.delete(idContainer);
+                    },
+                );
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
         closeModal();
     }
 

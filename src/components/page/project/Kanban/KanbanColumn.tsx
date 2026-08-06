@@ -4,7 +4,6 @@ import type { Card, Columns } from "../../../../type";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { CollisionPriority } from "@dnd-kit/abstract";
 import { useModal } from "../../../../store";
-import { db } from "../../../../db";
 
 interface KanbanColumnType {
     column: Columns;
@@ -24,21 +23,6 @@ function KanbanColumn({ cards, column, index }: KanbanColumnType) {
     const { openModal } = useModal();
 
     const cardCount = cards.length;
-
-    async function handleColumnDelete() {
-        try {
-            const cardId = cards.map((c) => c.id);
-
-            //Delete column and its card content and each individual task list of the card
-            await Promise.all([
-                db.columns.delete(column.id),
-                db.cards.where("columnId").equals(column.id).delete(),
-                db.task.where("cardId").anyOf(cardId).delete(),
-            ]);
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
     return (
         <div
@@ -67,7 +51,7 @@ function KanbanColumn({ cards, column, index }: KanbanColumnType) {
                     <button onClick={() => openModal("new-card", column.id)}>
                         <Plus size={14} />
                     </button>
-                    <button onClick={handleColumnDelete}>
+                    <button onClick={() => openModal("column", column.id)}>
                         <Minus size={14} />
                     </button>
                 </div>
