@@ -6,6 +6,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
 import { Navigation } from "./Navigation";
 import { Workspace } from "./Workspace";
+import { useTheme } from "../../../store";
 
 interface DataType {
     id: string;
@@ -14,6 +15,7 @@ interface DataType {
 
 function Sidebar() {
     const navigate = useNavigate();
+    const { toggleTheme } = useTheme();
     const [isCollapse, setIsCollapse] = useState<boolean>(false);
     const [search, setSearch] = useState<string>("");
 
@@ -149,6 +151,8 @@ function Sidebar() {
                     />
                 </div>
             </div>
+
+            <button onClick={toggleTheme}>Toggle</button>
         </motion.main>
     );
 }

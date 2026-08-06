@@ -7,15 +7,39 @@
 @import "@fontsource-variable/inter";
 
 @theme {
-    --color-bg-primary: #f7f4ef;
-    --color-bg-secondary: #efeae2;
-    --color-card-detail: #ffffff;
-    --color-button: #ab6b05;
-    --color-txt-primary: #2a2725;
-    --color-txt-secondary: #706a65;
-    --color-divider: #e3ddd3;
-    --color-foreground-muted-primary: #5d5d5d;
-    --color-foreground-muted-secondary: #ededed;
+    --color-bg-primary: var(--bg-primary);
+    --color-bg-secondary: var(--bg-secondary);
+    --color-card-detail: var(--card-detail);
+    --color-button: var(--button);
+    --color-txt-primary: var(--txt-primary);
+    --color-txt-secondary: var(--txt-secondary);
+    --color-divider: var(--divider);
+    --color-foreground-muted-primary: var(--foreground-muted-primary);
+    --color-foreground-muted-secondary: var(--foreground-muted-secondary);
+}
+
+:root {
+    --bg-primary: #f7f4ef;
+    --bg-secondary: #efeae2;
+    --card-detail: #ffffff;
+    --button: #ab6b05;
+    --txt-primary: #2a2725;
+    --txt-secondary: #706a65;
+    --divider: #e3ddd3;
+    --foreground-muted-primary: #5d5d5d;
+    --foreground-muted-secondary: #ededed;
+}
+
+.dark {
+    --bg-primary: #161413;
+    --bg-secondary: #1e1b1a;
+    --card-detail: #282422;
+    --button: #ab6b05;
+    --txt-primary: #f4efea;
+    --txt-secondary: ##a39b95;
+    --divider: #3d3734;
+    --foreground-muted-primary: #5d5d5d;
+    --foreground-muted-secondary: #ededed;
 }
 
 .logo-image {
