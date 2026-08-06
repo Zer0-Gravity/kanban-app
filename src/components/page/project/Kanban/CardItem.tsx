@@ -7,6 +7,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../../db";
 import PriorityTags from "../../utilityComponent/PriorityTags";
 import { durationLeft, urgent } from "../../../../utils";
+import { useModal } from "../../../../store";
 
 interface CardType {
     card: Card;
@@ -23,6 +24,7 @@ function CardItem({ card, index, columnId }: CardType) {
         accept: ["card"],
     });
 
+    const { openModal } = useModal();
     const tags = useLiveQuery(() =>
         db.tag.where("id").equals(card.tagId).first(),
     );
@@ -34,17 +36,6 @@ function CardItem({ card, index, columnId }: CardType) {
 
     //Flag for the card nearing deadline or already pass the deadline
     const { isUrgent } = urgent(deadlineDuration);
-
-    async function handleDeleteCard() {
-        try {
-            await Promise.all([
-                db.cards.delete(card.id),
-                db.task.where("cardId").equals(card.id).delete(),
-            ]);
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
     const dbTask = useLiveQuery(async () => {
         const taskList = await db.task
@@ -97,7 +88,7 @@ function CardItem({ card, index, columnId }: CardType) {
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        handleDeleteCard();
+                        openModal("card", card.id);
                     }}
                 >
                     <Minus size={14} />

@@ -6,11 +6,30 @@ import {
     DialogHeader,
     DialogTitle,
 } from "../../ui/dialog";
+import { db } from "../../../db";
 
 function Alert() {
-    const { closeModal, modalName } = useModal();
+    const { idContainer, closeModal, modalName } = useModal();
 
-    const isOpen = modalName ? true : false;
+    const isOpen =
+        modalName === "card" ||
+        modalName === "column" ||
+        modalName === "project" ||
+        modalName === "collections";
+
+    async function deleteItems() {
+        if (modalName === "card") {
+            try {
+                await db.transaction("rw", [db.cards, db.task], async () => {
+                    await db.cards.delete(idContainer);
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        closeModal();
+    }
 
     return (
         <Dialog
@@ -38,7 +57,10 @@ function Alert() {
                         <button className="text-green-500 text-[16px] active:scale-95 border px-2 py-1 rounded-md hover:bg-green-500 hover:text-white transition-all">
                             Cancel
                         </button>
-                        <button className="text-red-500 text-[16px] active:scale-95 border px-2 py-1 rounded-md hover:bg-red-500 hover:text-white transition-all">
+                        <button
+                            onClick={deleteItems}
+                            className="text-red-500 text-[16px] active:scale-95 border px-2 py-1 rounded-md hover:bg-red-500 hover:text-white transition-all"
+                        >
                             Delete
                         </button>
                     </div>

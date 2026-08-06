@@ -31,6 +31,7 @@ db.collections.hook("deleting", function (collectionsId, _obj, transactions) {
         );
 });
 
+//Projects Cascade and deletes it columns
 db.projects.hook("deleting", function (projectId, _obj, transactions) {
     transactions
         .table("columns")
@@ -41,6 +42,7 @@ db.projects.hook("deleting", function (projectId, _obj, transactions) {
         );
 });
 
+//Card columns and delete its cards
 db.columns.hook("deleting", function (columnId, _obj, transactions) {
     transactions
         .table("cards")
@@ -49,7 +51,7 @@ db.columns.hook("deleting", function (columnId, _obj, transactions) {
         .then((cardIds) => transactions.table("cards").bulkDelete(cardIds));
 });
 
-//Card Cascade and delete it task
+//Card Cascade and deletes it task
 db.cards.hook("deleting", function (cardId, _obj, transactions) {
     transactions.table("task").where({ cardId: cardId }).delete();
 });
