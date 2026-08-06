@@ -40,6 +40,15 @@ import type { Tag } from "../../../type";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
 
+async function deleteTag(id: string) {
+    try {
+        await db.cards.where("tagId").equals(id).modify({ tagId: "default" });
+        await db.tag.delete(id);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const columns: ColumnDef<Tag>[] = [
     {
         id: "number",
@@ -85,7 +94,7 @@ const columns: ColumnDef<Tag>[] = [
                         </DropdownMenuItem>
                         <DropdownMenuItem
                             className="text-red-400 hover:bg-foreground-muted-secondary"
-                            onClick={() => db.tag.delete(row.original.id)}
+                            onClick={() => deleteTag(row.original.id)}
                         >
                             <Trash />
                             <span>Delete</span>

@@ -48,4 +48,10 @@ export interface Tag {
     tagColor: string;
 }
 
+export const DEFAULT_TAG: Tag = {
+    id: "default",
+    tagName: "Empty Tag",
+    tagColor: "#000",
+};
+
 export type Priority = "High" | "Medium" | "Low";

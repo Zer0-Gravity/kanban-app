@@ -1,5 +1,5 @@
 import { CalendarFold, CheckCircle, Clock, Minus } from "lucide-react";
-import type { Card } from "../../../../type";
+import { DEFAULT_TAG, type Card } from "../../../../type";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { intervalToDuration } from "date-fns";
 import { Link } from "react-router";
@@ -25,9 +25,11 @@ function CardItem({ card, index, columnId }: CardType) {
     });
 
     const { openModal } = useModal();
-    const tags = useLiveQuery(() =>
-        db.tag.where("id").equals(card.tagId).first(),
-    );
+    const tags = useLiveQuery(() => {
+        if (card.tagId === "default") return DEFAULT_TAG;
+
+        return db.tag.get(card.tagId);
+    });
 
     const deadlineDuration = intervalToDuration({
         start: new Date(),

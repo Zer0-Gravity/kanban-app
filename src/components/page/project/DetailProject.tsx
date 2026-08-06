@@ -17,7 +17,7 @@ import { db } from "../../../db";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { format, intervalToDuration } from "date-fns";
 import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
-import type { Task } from "../../../type";
+import { DEFAULT_TAG, type Task } from "../../../type";
 import { move } from "@dnd-kit/helpers";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../../ui/sheet";
 import { Separator } from "@base-ui/react";
@@ -37,7 +37,7 @@ function DetailProject() {
         const dbCard = await db.cards.get(cardId);
         const dbTags = await db.tag.where("id").equals(dbCard.tagId).first();
 
-        return { ...dbCard, tag: dbTags };
+        return { ...dbCard, tag: dbTags || DEFAULT_TAG };
     }, [cardId]);
 
     const taskList =
