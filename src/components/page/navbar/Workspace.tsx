@@ -35,7 +35,6 @@ export function Workspace({
     setCollapse: Dispatch<SetStateAction<boolean>>;
 }) {
     const { openModal } = useModal();
-    const navigate = useNavigate();
     const collectionsTree = useLiveQuery(async () => {
         const parentFolder = await db.collections.toArray();
 
@@ -56,52 +55,6 @@ export function Workspace({
         //return the data using promise.all
         return Promise.all(childContentPromise);
     });
-
-    async function deleteProject(id: string) {
-        try {
-            //Wrap everything into transactions
-            await db.transaction(
-                "rw",
-                [db.projects, db.columns, db.cards, db.task],
-                async () => {
-                    // Get the columns data and id
-                    const columns = await db.columns
-                        .where("projectId")
-                        .equals(id)
-                        .toArray();
-                    const colId = columns.map((col) => col.id);
-
-                    if (colId.length > 0) {
-                        //if column id not empty get the data and id card
-                        const cards = await db.cards
-                            .where("columnId")
-                            .anyOf(colId)
-                            .toArray();
-                        const cardId = cards.map((card) => card.id);
-
-                        if (cardId.length > 0) {
-                            //Get the task data
-                            await db.task
-                                .where("cardId")
-                                .anyOf(cardId)
-                                .delete();
-                        }
-
-                        //Delete the children data
-                        await db.cards.where("columnId").anyOf(colId).delete();
-                        await db.columns.where("projectId").equals(id).delete();
-                    }
-
-                    //Delete tge parent data
-                    await db.projects.delete(id);
-                },
-            );
-
-            navigate("/");
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
     if (!collectionsTree) {
         return;
@@ -182,7 +135,10 @@ export function Workspace({
                                             <button
                                                 className="hidden group-hover:block active:bg-gray-300 rounded-full"
                                                 onClick={() =>
-                                                    deleteProject(file.id)
+                                                    openModal(
+                                                        "project",
+                                                        file.id,
+                                                    )
                                                 }
                                             >
                                                 <Minus size={13} />

@@ -7,10 +7,11 @@ import {
     DialogTitle,
 } from "../../ui/dialog";
 import { db } from "../../../db";
+import { useNavigate } from "react-router";
 
 function Alert() {
     const { idContainer, closeModal, modalName } = useModal();
-
+    const navigate = useNavigate();
     const isOpen =
         modalName === "card" ||
         modalName === "column" ||
@@ -18,6 +19,7 @@ function Alert() {
         modalName === "collections";
 
     async function deleteItems() {
+        //Delete card
         if (modalName === "card") {
             try {
                 await db.transaction("rw", [db.cards, db.task], async () => {
@@ -28,6 +30,7 @@ function Alert() {
             }
         }
 
+        //Delete column
         if (modalName === "column") {
             try {
                 await db.transaction(
@@ -37,6 +40,22 @@ function Alert() {
                         await db.columns.delete(idContainer);
                     },
                 );
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        //Delete project
+        if (modalName === "project") {
+            try {
+                await db.transaction(
+                    "rw",
+                    [db.projects, db.columns, db.cards, db.task],
+                    async () => {
+                        await db.projects.delete(idContainer);
+                    },
+                );
+                navigate("/");
             } catch (error) {
                 console.log(error);
             }
