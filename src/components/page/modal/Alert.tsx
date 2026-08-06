@@ -16,25 +16,21 @@ function Alert() {
         modalName === "card" ||
         modalName === "column" ||
         modalName === "project" ||
-        modalName === "collection";
+        modalName === "workspace";
 
     console.log(modalName, idContainer);
 
     async function deleteItems() {
-        //Delete card
-        if (modalName === "card") {
-            try {
+        try {
+            //Delete card
+            if (modalName === "card") {
                 await db.transaction("rw", [db.cards, db.task], async () => {
                     await db.cards.delete(idContainer);
                 });
-            } catch (error) {
-                console.log(error);
             }
-        }
 
-        //Delete column
-        if (modalName === "column") {
-            try {
+            //Delete column
+            if (modalName === "column") {
                 await db.transaction(
                     "rw",
                     [db.columns, db.cards, db.task],
@@ -42,14 +38,10 @@ function Alert() {
                         await db.columns.delete(idContainer);
                     },
                 );
-            } catch (error) {
-                console.log(error);
             }
-        }
 
-        //Delete project
-        if (modalName === "project") {
-            try {
+            //Delete project
+            if (modalName === "project") {
                 await db.transaction(
                     "rw",
                     [db.projects, db.columns, db.cards, db.task],
@@ -58,14 +50,10 @@ function Alert() {
                     },
                 );
                 navigate("/");
-            } catch (error) {
-                console.log(error);
             }
-        }
 
-        //Delete workspace collections
-        if (modalName === "collection") {
-            try {
+            //Delete collections
+            if (modalName === "workspace") {
                 await db.transaction(
                     "rw",
                     [
@@ -80,12 +68,12 @@ function Alert() {
                     },
                 );
                 navigate("/");
-            } catch (error) {
-                console.log(error);
             }
-        }
 
-        closeModal();
+            closeModal();
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
@@ -111,7 +99,7 @@ function Alert() {
                     </div>
 
                     <div className="flex gap-3 justify-end">
-                        <button className="text-green-500 text-[16px] active:scale-95 border px-2 py-1 rounded-md hover:bg-green-500 hover:text-white transition-all">
+                        <button onClick={closeModal} className="text-green-500 text-[16px] active:scale-95 border px-2 py-1 rounded-md hover:bg-green-500 hover:text-white transition-all">
                             Cancel
                         </button>
                         <button

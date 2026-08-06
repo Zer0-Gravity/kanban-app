@@ -187,7 +187,7 @@ function DropdownWorkspace({ id }: { id: string }) {
                 </DropdownMenuItem>
                 <DropdownMenuItem className="hover:bg-gray-200">
                     <button
-                        onClick={() => openModal("collection", id)}
+                        onClick={() => openModal("workspace", id)}
                         className="flex gap-2 w-full text-red-500"
                     >
                         <Trash size={13} />
