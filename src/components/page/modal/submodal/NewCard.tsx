@@ -124,7 +124,7 @@ function NewCard() {
                         control={method.control}
                         render={({ field }) => (
                             <Popover>
-                                <PopoverTrigger className="bg-foreground-muted-secondary text-foreground-muted-primary py-4 pl-15 w-full rounded-xl outline-none focus-visible:ring-1 relative">
+                                <PopoverTrigger className="custom-input relative">
                                     <button className="w-full text-left">
                                         {field.value ? (
                                             format(field.value, "PPPP")
@@ -182,7 +182,7 @@ function NewCard() {
                                     <div className="relative text-foreground-muted-primary">
                                         <ComboboxInput
                                             placeholder="Search tag.. "
-                                            className="bg-foreground-muted-secondary pl-13 py-4 h-13.5 rounded-lg border-none"
+                                            className="custom-input"
                                         />
 
                                         <TagsIcon

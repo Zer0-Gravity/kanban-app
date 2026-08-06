@@ -54,7 +54,7 @@ function SelectField({
                                 value={field.value}
                                 onValueChange={field.onChange}
                             >
-                                <SelectTrigger className="bg-foreground-muted-secondary text-[14px]! pl-15 pr-5 w-full h-14! rounded-lg outline-none border-none focus-visible:ring-1">
+                                <SelectTrigger className="custom-input ring-0!">
                                     <SelectValue placeholder={placeholder} />
                                 </SelectTrigger>
                                 <SelectContent
