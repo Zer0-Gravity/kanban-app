@@ -1,7 +1,6 @@
 import {
     File,
     Home,
-    icons,
     Moon,
     Search,
     SidebarClose,
@@ -25,7 +24,7 @@ interface DataType {
 
 function Sidebar() {
     const navigate = useNavigate();
-    const { toggleTheme, isDark } = useTheme();
+    const { toggleTheme, isDark, isChecked } = useTheme();
     const [isCollapse, setIsCollapse] = useState<boolean>(false);
     const [search, setSearch] = useState<string>("");
 
@@ -166,6 +165,7 @@ function Sidebar() {
                 <Switch
                     className="data-checked:bg-black data-unchecked:bg-white  [&>span]:bg-bg-primary"
                     id="switch"
+                    checked={isChecked}
                     onCheckedChange={toggleTheme}
                 />
                 <label htmlFor="switch" className="select-none">

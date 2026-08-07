@@ -10,6 +10,7 @@ interface ModalType {
 
 interface ThemeType {
     isDark: boolean;
+    isChecked: boolean;
     toggleTheme: () => void;
 }
 
@@ -24,7 +25,12 @@ export const useTheme = create<ThemeType>()(
     persist(
         (set) => ({
             isDark: false,
-            toggleTheme: () => set((state) => ({ isDark: !state.isDark })),
+            isChecked: false,
+            toggleTheme: () =>
+                set((state) => ({
+                    isDark: !state.isDark,
+                    isChecked: !state.isChecked,
+                })),
         }),
         { name: "theme-storage" },
     ),
