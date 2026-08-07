@@ -40,7 +40,7 @@ function ProjectPage() {
                     {tabs.map((tab, index) => (
                         <div key={index} className="relative">
                             <button
-                                className={`flex gap-2 items-center p-2 ${activeTab === tab.title ? "font-semibold" : "text-slate-500"}`}
+                                className={`flex gap-2 items-center p-2 ${activeTab === tab.title ? "font-semibold text-txt-primary" : "text-txt-secondary opacity-50"}`}
                                 onClick={() => setActiveTab(tab.title)}
                             >
                                 <tab.icon size={14} />
@@ -55,7 +55,7 @@ function ProjectPage() {
                                         stiffness: 200,
                                         damping: 20,
                                     }}
-                                    className="absolute h-1 w-full bg-black rounded-full"
+                                    className="absolute h-1 w-full bg-divider rounded-full"
                                 />
                             )}
                         </div>

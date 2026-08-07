@@ -36,7 +36,7 @@
     --card-detail: #282422;
     --button: #ab6b05;
     --txt-primary: #f4efea;
-    --txt-secondary: ##a39b95;
+    --txt-secondary: #a39b95;
     --divider: #3d3734;
     --foreground-muted-primary: #5d5d5d;
     --foreground-muted-secondary: #ededed;
@@ -47,10 +47,10 @@
     font-size: 50px;
     font-weight: 900;
     letter-spacing: 0.03em;
-    color: #5d5d5d;
+    color: var(--color-txt-primary);
 
     span {
-        color: #009cff;
+        color: var(--color-button);
     }
 }
 

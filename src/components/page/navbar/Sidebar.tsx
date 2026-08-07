@@ -52,7 +52,7 @@ function Sidebar() {
                 transition: { type: spring, damping: 20, stiffness: 250 },
                 width: isCollapse ? "65px" : "270px",
             }}
-            className="bg-bg-secondary h-full w-67.5 rounded-r-lg p-3"
+            className="bg-bg-secondary h-full w-67.5 rounded-r-lg p-3 text-txt-primary"
         >
             <header
                 className={`flex gap-2 items-center ${isCollapse ? "justify-center" : "justify-between"}`}
@@ -111,7 +111,7 @@ function Sidebar() {
                                         onClick={() => {
                                             setSearch("");
                                         }}
-                                        className="flex gap-2 items-center hover:bg-slate-300 p-1 rounded-md"
+                                        className="flex gap-2 items-center p-1 rounded-md"
                                     >
                                         <File size={12} />
                                         <p className="text-[12px]">{p.name}</p>

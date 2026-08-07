@@ -90,7 +90,7 @@ function DetailProject() {
                 }
             }}
         >
-            <SheetContent className="w-112.5! sm:max-w-none! p-3! bg-white rounded-xl border-none">
+            <SheetContent className="w-112.5! sm:max-w-none! p-3! bg-bg-secondary rounded-xl border-none text-txt-primary">
                 <SheetHeader className="p-0">
                     <SheetTitle className="flex items-center">
                         <input

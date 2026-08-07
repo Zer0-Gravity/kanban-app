@@ -27,7 +27,7 @@ function KanbanColumn({ cards, column, index }: KanbanColumnType) {
     return (
         <div
             ref={ref}
-            className={`w-67.5 shrink-0 flex flex-col h-fit max-h-full rounded-xl ${isDragging ? "opacity-50 border border-button" : null}`}
+            className={`w-67.5 shrink-0 flex flex-col h-fit max-h-full rounded-xl shadow-md ${isDragging ? "opacity-50 border border-button" : null}`}
         >
             <div
                 style={{
@@ -43,16 +43,16 @@ function KanbanColumn({ cards, column, index }: KanbanColumnType) {
                     <p className="font-semibold text-[13px]">
                         {column.columnName}
                     </p>
-                    <p className="text-[12px] font-bold bg-white w-5 h-5 flex items-center justify-center rounded-full">
+                    <p className="text-[12px] text-black font-bold bg-white w-5 h-5 flex items-center justify-center rounded-full">
                         {cardCount}
                     </p>
                 </div>
                 <div className="flex gap-2 items-center">
                     <button onClick={() => openModal("new-card", column.id)}>
-                        <Plus size={14} />
+                        <Plus size={14} className="text-txt-primary" />
                     </button>
                     <button onClick={() => openModal("column", column.id)}>
-                        <Minus size={14} />
+                        <Minus size={14} className="text-txt-primary" />
                     </button>
                 </div>
             </div>

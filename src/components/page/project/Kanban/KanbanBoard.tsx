@@ -7,6 +7,7 @@ import { move } from "@dnd-kit/helpers";
 import { useEffect, useRef, useState } from "react";
 import type { Card, Columns } from "../../../../type";
 import { useLiveQuery } from "dexie-react-hooks";
+import Button from "../../utilityComponent/Button";
 
 function KanbanBoard({ activeProject }: { activeProject: string }) {
     const { openModal } = useModal();
@@ -136,13 +137,13 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
                 }}
             >
                 <div className="flex justify-end">
-                    <button
+                    <Button
+                        icon={Plus}
                         onClick={() => openModal("new-board", activeProject)}
-                        className="bg-button text-white p-2 rounded-lg flex gap-2 items-center"
+                        customClass="bg-button text-white"
                     >
-                        <Plus size={14} />
-                        <p className="text-[14px] font-medium">Column</p>
-                    </button>
+                        Column
+                    </Button>
                 </div>
 
                 <div className="flex flex-1 gap-4 py-3 scrollbar-custom min-h-0 overflow-x-auto overflow-y-hidden">

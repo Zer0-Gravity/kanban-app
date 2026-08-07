@@ -132,7 +132,7 @@ function ManageTag() {
 
     if (!data) return;
     return (
-        <main className="h-full w-full md:w-175 gap-5 flex flex-col  ">
+        <main className="h-full w-full md:w-175 gap-5 flex flex-col text-txt-primary ">
             <header className="space-y-3 mt-10">
                 <div className="flex gap-3 items-center">
                     <h1 className="font-bold text-[50px]">Manage Tag</h1>

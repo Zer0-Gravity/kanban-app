@@ -33,7 +33,7 @@ function OverviewPage({
                 About this project
             </h1>
 
-            <Separator className="bg-black" />
+            <Separator className="bg-divider" />
 
             <div>
                 <p className="flex gap-2 items-center text-[14px]">
@@ -46,7 +46,7 @@ function OverviewPage({
                 id="description"
                 value={desc}
                 onChange={(e) => setDesc(e.target.value)}
-                className="w-full p-2 h-70 bg-white rounded-lg outline-none"
+                className="w-full p-2 h-70 bg-bg-secondary text-txt-primary rounded-lg outline-none"
             />
 
             <button

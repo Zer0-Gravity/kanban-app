@@ -21,7 +21,7 @@ function MainPage() {
     if (!dbProject) return;
 
     return (
-        <main className="w-full md:w-162.5 space-y-5 p-3">
+        <main className="w-full md:w-162.5 space-y-5 p-3 text-txt-secondary">
             <div className="flex items-center">
                 <img
                     src="/logo-kanban.svg"
@@ -51,10 +51,10 @@ function MainPage() {
             </div>
             <div className="space-y-3">
                 <p className="font-semibold text-[16px]">Recent Project</p>
-                <div className="flex flex-col gap-2 border p-2 rounded-lg h-75 w-162.5 overflow-hidden overflow-y-auto scrollbar-none">
+                <div className="flex flex-col gap-2 p-2 rounded-lg h-75 w-162.5 overflow-hidden overflow-y-auto scrollbar-none bg-bg-secondary">
                     {dbProject.length !== 0 ? (
                         dbProject.map((p) => (
-                            <div className="w-full h-12.5 border rounded-lg p-2 flex justify-between items-center hover:bg-slate-100">
+                            <div className="w-full h-12.5 shadow-xs rounded-lg p-2 flex justify-between items-center bg-bg-primary">
                                 <div className="flex flex-col">
                                     <div className="flex gap-2 items-center">
                                         <File size={14} />

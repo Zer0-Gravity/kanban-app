@@ -34,7 +34,7 @@ function ModalContainer({
         >
             <DialogContent className="bg-bg-secondary ring-0">
                 <DialogHeader>
-                    <DialogTitle className="text-[20px] font-semibold">
+                    <DialogTitle className="text-[20px] text-txt-primary font-semibold">
                         {title}
                     </DialogTitle>
                     <DialogDescription className="text-[12px]">

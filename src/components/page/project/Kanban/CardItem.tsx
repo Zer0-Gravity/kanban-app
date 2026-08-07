@@ -69,7 +69,7 @@ function CardItem({ card, index, columnId }: CardType) {
         <Link
             to={`detail/${card.id}`}
             ref={ref}
-            className={`rounded-lg p-3 w-62.5 space-y-2 bg-white ${isDragging && "opacity-50"} ${isUrgent && "border-2 border-red-500"}`}
+            className={`rounded-lg p-3 w-62.5 space-y-2 bg-bg-primary shadow-md ${isDragging && "opacity-50"} ${isUrgent && "border-2 border-red-500"}`}
         >
             <div className="flex justify-between items-center">
                 <div className="flex gap-3">
