@@ -179,7 +179,7 @@ function DetailProject() {
                             icon={Plus}
                             onClick={() => openModal("new-task", cardId)}
                         >
-                            Task
+                            <p>Task</p>
                         </Button>
                     </div>
 
@@ -208,7 +208,7 @@ function DetailProject() {
                         </div>
 
                         <DragOverlay>
-                            <div className="border-2 border-button bg-white px-4 py-3 rounded-lg">
+                            <div className="border-2 border-button bg-bg-primary px-4 py-3 rounded-lg">
                                 <p>Dragging task</p>
                             </div>
                         </DragOverlay>
@@ -238,9 +238,9 @@ function SortableTask({ id, index, task }) {
         >
             <div className="flex gap-3">
                 <Checkbox
-                    className="peer rounded-full border-2 border-button data-checked:bg-button size-5 text-white cursor-pointer"
+                    className="peer rounded-full border-2 border-button data-checked:bg-button size-5 cursor-pointer"
                     onCheckedChange={updateCheckbox}
-                    disabled={task.done}
+                    checked={task.done}
                 />
                 <span className="font-medium select-none peer-data-checked:line-through">
                     {task.taskName}
