@@ -14,7 +14,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
 import { Navigation } from "./Navigation";
 import { Workspace } from "./Workspace";
-import { useTheme } from "../../../store";
+import { useCollapse, useTheme } from "../../../store";
 import { Switch } from "../../ui/switch";
 
 interface DataType {
@@ -25,7 +25,7 @@ interface DataType {
 function Sidebar() {
     const navigate = useNavigate();
     const { toggleTheme, isDark, isChecked } = useTheme();
-    const [isCollapse, setIsCollapse] = useState<boolean>(false);
+    const { toggleSidebar, isCollapse } = useCollapse();
     const [search, setSearch] = useState<string>("");
 
     const dbData = useLiveQuery(async () => {
@@ -88,7 +88,7 @@ function Sidebar() {
                         rotate: isCollapse ? 180 : 0,
                         transition: { type: spring },
                     }}
-                    onClick={() => setIsCollapse(!isCollapse)}
+                    onClick={toggleSidebar}
                 >
                     <SidebarClose size={18} />
                 </motion.button>
@@ -106,7 +106,7 @@ function Sidebar() {
                 <Search
                     size={14}
                     className="absolute left-3 top-1/2 -translate-y-1/2"
-                    onClick={() => setIsCollapse(false)}
+                    onClick={toggleSidebar}
                 />
 
                 {/* Check if search isn't empty string   */}
@@ -150,7 +150,7 @@ function Sidebar() {
                     />
                     <Workspace
                         isCollapse={isCollapse}
-                        setCollapse={setIsCollapse}
+                        setCollapse={toggleSidebar}
                     />
                     <Navigation
                         link="/manage-tag"

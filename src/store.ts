@@ -14,6 +14,11 @@ interface ThemeType {
     toggleTheme: () => void;
 }
 
+interface SidebarType {
+    isCollapse: boolean;
+    toggleSidebar: () => void;
+}
+
 export const useModal = create<ModalType>((set) => ({
     modalName: null,
     idContainer: null,
@@ -33,5 +38,16 @@ export const useTheme = create<ThemeType>()(
                 })),
         }),
         { name: "theme-storage" },
+    ),
+);
+
+export const useCollapse = create<SidebarType>()(
+    persist(
+        (set) => ({
+            isCollapse: false,
+            toggleSidebar: () =>
+                set((state) => ({ isCollapse: !state.isCollapse })),
+        }),
+        { name: "sidebar-storage" },
     ),
 );
