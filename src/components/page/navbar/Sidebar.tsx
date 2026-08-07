@@ -1,4 +1,13 @@
-import { File, Home, Search, SidebarClose, Tags } from "lucide-react";
+import {
+    File,
+    Home,
+    icons,
+    Moon,
+    Search,
+    SidebarClose,
+    Sun,
+    Tags,
+} from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { motion, spring } from "motion/react";
@@ -7,6 +16,7 @@ import { db } from "../../../db";
 import { Navigation } from "./Navigation";
 import { Workspace } from "./Workspace";
 import { useTheme } from "../../../store";
+import { Switch } from "../../ui/switch";
 
 interface DataType {
     id: string;
@@ -15,7 +25,7 @@ interface DataType {
 
 function Sidebar() {
     const navigate = useNavigate();
-    const { toggleTheme } = useTheme();
+    const { toggleTheme, isDark } = useTheme();
     const [isCollapse, setIsCollapse] = useState<boolean>(false);
     const [search, setSearch] = useState<string>("");
 
@@ -52,7 +62,7 @@ function Sidebar() {
                 transition: { type: spring, damping: 20, stiffness: 250 },
                 width: isCollapse ? "65px" : "270px",
             }}
-            className="bg-bg-secondary h-full w-67.5 rounded-r-lg p-3 text-txt-primary"
+            className="bg-bg-secondary h-full w-67.5 rounded-r-lg p-3 text-txt-primary flex flex-col"
         >
             <header
                 className={`flex gap-2 items-center ${isCollapse ? "justify-center" : "justify-between"}`}
@@ -127,7 +137,7 @@ function Sidebar() {
                 )}
             </div>
 
-            <div className="mt-8 space-y-5">
+            <div className="mt-8 space-y-5 flex-1">
                 {!isCollapse && (
                     <p className="text-[12px] font-bold">Navigation</p>
                 )}
@@ -152,7 +162,30 @@ function Sidebar() {
                 </div>
             </div>
 
-            <button onClick={toggleTheme}>Toggle</button>
+            <div className="flex gap-3 items-center">
+                <Switch
+                    className="data-checked:bg-black data-unchecked:bg-white  [&>span]:bg-bg-primary"
+                    id="switch"
+                    onCheckedChange={toggleTheme}
+                />
+                <label htmlFor="switch" className="select-none">
+                    {!isCollapse && (
+                        <div>
+                            {isDark ? (
+                                <div className="flex gap-3 items-center">
+                                    <Moon />
+                                    <span>Dark Mode</span>
+                                </div>
+                            ) : (
+                                <div className="flex gap-3 items-center">
+                                    <Sun />
+                                    <span>Light Mode</span>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </label>
+            </div>
         </motion.main>
     );
 }
