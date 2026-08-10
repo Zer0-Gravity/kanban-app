@@ -2,35 +2,25 @@ import { Controller, FormProvider, useForm } from "react-hook-form";
 import ModalContainer from "../../utilityComponent/ModalContainer";
 import CustomInputField from "../../utilityComponent/CustomInputField";
 import {
+    AlertCircle,
     Calendar1,
     CreditCard,
     Flag,
-    PackageOpen,
     Save,
-    Tag,
-    TagsIcon,
     TextInitial,
 } from "lucide-react";
 import Button from "../../utilityComponent/Button";
-
-import {
-    Combobox,
-    ComboboxContent,
-    ComboboxEmpty,
-    ComboboxInput,
-    ComboboxItem,
-    ComboboxList,
-} from "../../../ui/combobox";
 import CustomTextArea from "../../utilityComponent/CustomTextArea";
 import { Popover, PopoverContent, PopoverTrigger } from "../../../ui/popover";
 import { Calendar } from "../../../ui/calendar";
 import { format, startOfDay } from "date-fns";
 import { db } from "../../../../db";
 import { useModal } from "../../../../store";
-import { useEffect, useState } from "react";
+
 import SelectField from "../../utilityComponent/SelectField";
-import { useNavigate } from "react-router";
-import type { Card } from "../../../../type";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import ComboxTag from "../../utilityComponent/ComboxTag";
 
 const selectPriority = [
     { label: "High", value: "High" },
@@ -38,40 +28,21 @@ const selectPriority = [
     { label: "Medium", value: "Medium" },
 ];
 
-interface SelectType {
-    value: string;
-    label: string;
-}
+const schema = yup
+    .object({
+        cardName: yup.string().required("Card name is required"),
+        description: yup.string().optional(),
+        deadlineDate: yup.date().required("Deadline date is required"),
+        tagId: yup.string().required("Tag is required"),
+        priority: yup.string().required("Priority is required"),
+    })
+    .required();
 
 function NewCard() {
-    const method = useForm();
+    const method = useForm({ resolver: yupResolver(schema) });
     const { closeModal, idContainer } = useModal();
-    const navigate = useNavigate();
 
-    const [tags, setTags] = useState<SelectType[]>([]);
-
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                //Get the column data from the database
-                const tags = await db.tag.toArray();
-
-                const mappedTag = tags.map((t) => ({
-                    value: t.id,
-                    label: t.tagName,
-                }));
-
-                setTags(mappedTag);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        fetchData();
-    }, [idContainer]);
-
-    if (!tags) return;
-
-    async function handleNewCard(data: Card) {
+    async function handleNewCard(data: any) {
         try {
             //Add new card data to the database
             await db.cards.add({
@@ -122,115 +93,58 @@ function NewCard() {
                     <Controller
                         name="deadlineDate"
                         control={method.control}
-                        render={({ field }) => (
-                            <Popover>
-                                <PopoverTrigger className="custom-input relative">
-                                    <button className="w-full text-left">
-                                        {field.value ? (
-                                            format(field.value, "PPPP")
-                                        ) : (
-                                            <span className="text-[14px]">
-                                                Set deadline date...
-                                            </span>
-                                        )}
-                                        <Calendar1
-                                            size={16}
-                                            className="absolute left-4 top-1/2 -translate-y-1/2"
+                        render={({ field, fieldState: { error } }) => (
+                            <div className="space-y-3">
+                                <Popover>
+                                    <PopoverTrigger className="custom-input relative">
+                                        <button className="w-full text-left">
+                                            {field.value ? (
+                                                format(field.value, "PPPP")
+                                            ) : (
+                                                <span className="text-[14px]! text-txt-secondary!">
+                                                    Set deadline date...
+                                                </span>
+                                            )}
+                                            <Calendar1
+                                                size={16}
+                                                className="absolute left-4 top-1/2 -translate-y-1/2"
+                                            />
+                                        </button>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                        className="bg-bg-secondary ring-0! outline-0 text-txt-primary"
+                                        align="start"
+                                    >
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            disabled={(day) =>
+                                                day < startOfDay(new Date())
+                                            }
+                                            classNames={{
+                                                disabled:
+                                                    "pointer-event-none line-through",
+                                                selected:
+                                                    "bg-bg-primary text-white rounded-full ring-0! outline-none!",
+                                                today: "bg-bg-primary rounded-full",
+                                            }}
                                         />
-                                    </button>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                    className="bg-white border-none outline-0"
-                                    align="start"
-                                >
-                                    <Calendar
-                                        mode="single"
-                                        selected={field.value}
-                                        onSelect={field.onChange}
-                                        disabled={(day) =>
-                                            day < startOfDay(new Date())
-                                        }
-                                        classNames={{
-                                            disabled:
-                                                "pointer-event-none line-through",
-                                            selected:
-                                                "bg-button text-white rounded-full",
-                                            today: "bg-gray-300 rounded-full",
-                                        }}
-                                    />
-                                </PopoverContent>
-                            </Popover>
+                                    </PopoverContent>
+                                </Popover>
+
+                                {error && (
+                                    <p className="text-red-500 text-[12px] flex gap-2 items-center">
+                                        <AlertCircle size={14} />
+                                        {error.message}
+                                    </p>
+                                )}
+                            </div>
                         )}
                     />
 
                     {/* Tag */}
-                    <Controller
-                        name="tagId"
-                        control={method.control}
-                        render={({ field }) => (
-                            <div className="space-y-3">
-                                <p className="font-semibold">Tag</p>
-
-                                <Combobox
-                                    items={tags}
-                                    value={field.value}
-                                    itemToStringValue={(tag) => tag.label}
-                                    onValueChange={(val) =>
-                                        field.onChange(val.value)
-                                    }
-                                >
-                                    <div className="relative text-foreground-muted-primary">
-                                        <ComboboxInput
-                                            placeholder="Search tag.. "
-                                            className="custom-input"
-                                        />
-
-                                        <TagsIcon
-                                            size={16}
-                                            className="absolute left-4 top-1/2 -translate-y-1/2"
-                                        />
-                                    </div>
-                                    <ComboboxContent
-                                        sideOffset={15}
-                                        className="shadow-[0px_3px_6px_4px_rgba(0,0,0,0.1)]"
-                                    >
-                                        <ComboboxEmpty className="bg-foreground-muted-secondary rounded-xl p-5">
-                                            <div className="flex justify-around items-center">
-                                                <div className="flex gap-3 p-2">
-                                                    <PackageOpen size={20} />
-                                                    <span>
-                                                        No matching tag is
-                                                        found!
-                                                    </span>
-                                                </div>
-                                                <Button
-                                                    icon={Tag}
-                                                    customClass="text-button"
-                                                    onClick={() => {
-                                                        navigate("manage-tag");
-                                                        closeModal();
-                                                    }}
-                                                >
-                                                    Manage tag
-                                                </Button>
-                                            </div>
-                                        </ComboboxEmpty>
-                                        <ComboboxList className="bg-foreground-muted-secondary rounded-xl">
-                                            {(tag) => (
-                                                <ComboboxItem
-                                                    key={tag.value}
-                                                    value={tag}
-                                                    className="data-highlighted:text-white data-highlighted:bg-button data-select:bg-button"
-                                                >
-                                                    {tag.label}
-                                                </ComboboxItem>
-                                            )}
-                                        </ComboboxList>
-                                    </ComboboxContent>
-                                </Combobox>
-                            </div>
-                        )}
-                    />
+                    <ComboxTag />
 
                     <SelectField
                         icon={Flag}
