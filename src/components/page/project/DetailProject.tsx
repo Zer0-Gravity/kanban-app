@@ -65,21 +65,6 @@ function DetailProject() {
     function handleClose() {
         navigate(`/project/${projectId}`);
     }
-
-    //function to delete the card alongside its task
-    async function handleDelete() {
-        try {
-            Promise.all([
-                db.cards.delete(cardId),
-                db.task.where("cardId").equals(cardId).delete(),
-            ]);
-
-            handleClose();
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     const { isUrgent } = urgent(deadlineDuration);
     return (
         <Sheet
@@ -109,7 +94,13 @@ function DetailProject() {
                                 size={14}
                                 onClick={() => titleRef.current.focus()}
                             />
-                            <Trash size={14} onClick={handleDelete} />
+                            <Trash
+                                size={14}
+                                onClick={() => {
+                                    openModal("card", cardId);
+                                    navigate(-1);
+                                }}
+                            />
                         </div>
                     </SheetTitle>
                 </SheetHeader>

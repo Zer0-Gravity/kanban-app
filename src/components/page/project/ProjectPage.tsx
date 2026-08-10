@@ -40,7 +40,7 @@ function ProjectPage() {
                                 projectName: e.target.value,
                             })
                         }
-                        className="text-[30px] font-bold max-w-70 w-fit"
+                        className="text-[30px] font-bold max-w-70 w-fit text-txt-primary"
                         onKeyDown={(e) => {
                             if (e.key === "Enter") setIsEditing(false);
                         }}
