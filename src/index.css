@@ -69,6 +69,11 @@
         font-family: "Inter", sans-serif;
         color: var(--color-txt-primary);
     }
+
+    input {
+        font-family: "Inter", sans-serif;
+        color: var(--color-txt-primary);
+    }
 }
 
 .scrollbar-custom::-webkit-scrollbar {

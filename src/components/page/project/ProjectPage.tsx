@@ -17,6 +17,7 @@ function ProjectPage() {
     ];
 
     const [activeTab, setActiveTab] = useState<string>("Kanban");
+    const [isEditing, setIsEditing] = useState<boolean>(false);
 
     const projectData = useLiveQuery(
         () => db.projects.get(projectId),
@@ -30,9 +31,30 @@ function ProjectPage() {
     return (
         <main className="relative flex flex-col h-screen w-full px-5 justify-center pb-2 space-y-3 overflow-hidden bg-bg-primary">
             <header className="mt-8 flex justify-between">
-                <h1 className="text-[30px] font-bold">
-                    {projectData.projectName}
-                </h1>
+                {isEditing ? (
+                    <input
+                        type="text"
+                        value={projectData.projectName}
+                        onChange={(e) =>
+                            db.projects.update(projectData.id, {
+                                projectName: e.target.value,
+                            })
+                        }
+                        className="text-[30px] font-bold max-w-70 w-fit"
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") setIsEditing(false);
+                        }}
+                        onBlur={() => setIsEditing(false)}
+                        autoFocus
+                    />
+                ) : (
+                    <h1
+                        onDoubleClick={() => setIsEditing(true)}
+                        className="text-[30px] font-bold"
+                    >
+                        {projectData.projectName}
+                    </h1>
+                )}
             </header>
 
             <section className="flex justify-between items-end">
