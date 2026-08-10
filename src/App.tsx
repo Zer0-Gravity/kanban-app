@@ -18,7 +18,7 @@ function App() {
 
     return (
         <BrowserRouter>
-            <main className="relative h-screen w-screen">
+            <main className="relative h-screen w-screen bg-bg-primary">
                 {modalName && <MainModal />}
                 <Routes>
                     <Route path="/" element={<RootLayout />}>
