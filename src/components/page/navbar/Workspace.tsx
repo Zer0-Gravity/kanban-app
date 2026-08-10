@@ -7,7 +7,7 @@ import {
 import { useModal } from "../../../store";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
-import { type Dispatch, type SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import {
     File,
     HardDrive,
@@ -35,6 +35,7 @@ export function Workspace({
     setCollapse: Dispatch<SetStateAction<boolean>>;
 }) {
     const { openModal } = useModal();
+    const [isEditing, setIsEditing] = useState<boolean>(false);
     const collectionsTree = useLiveQuery(async () => {
         const parentFolder = await db.collections.toArray();
 
@@ -84,72 +85,104 @@ export function Workspace({
 
             {/* Projects List */}
             {!isCollapse &&
-                collectionsTree.map((project, index) => (
-                    <CollapsibleContent key={project.id}>
-                        <MotionCollapse
-                            initial={{ y: -5, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            exit={{ y: -5, opacity: 0 }}
-                            transition={{ delay: index * 0.1 }}
-                        >
-                            <CollapsibleTrigger className="group transition-all px-2 rounded-lg flex justify-between w-full">
-                                <div
-                                    style={{
-                                        color: `${project.collectionsTheme}`,
-                                    }}
-                                    className="flex gap-2 items-center p-2 ml-4"
-                                >
-                                    <File size={14} />
-                                    <input
-                                        className="text-[14px] w-20  p-0.5 pointer-events-none"
-                                        value={project.collectionName}
-                                        onChange={(e) =>
-                                            db.collections.update(project.id, {
-                                                collectionName: e.target.value,
-                                            })
-                                        }
-                                    />
-                                </div>
-                                <DropdownWorkspace id={project.id} />
-                            </CollapsibleTrigger>
+                collectionsTree.map((project, index) => {
+                    const handleBlur = () => setIsEditing(false);
+                    const enterKey = (event) => {
+                        if (event.key === "Enter") setIsEditing(false);
+                    };
 
-                            {/* Project children list */}
-                            <CollapsibleContent className="space-y-2">
-                                {project.project.map((file) => (
-                                    <MotionCollapse
-                                        key={file.id}
-                                        initial={{ y: -5, opacity: 0 }}
-                                        animate={{ y: 0, opacity: 1 }}
-                                        exit={{ y: -5, opacity: 0 }}
-                                        transition={{ delay: index * 0.1 }}
-                                        className="group transition-all"
-                                    >
-                                        <NavLink
-                                            key={file.id}
-                                            to={`/project/${file.id}`}
-                                            className={({ isActive }) =>
-                                                `text-[13px] ml-12  ${isActive ? "underline font-semibold" : null} flex justify-between items-center `
-                                            }
-                                        >
-                                            <p>{file.projectName}</p>
-                                            <button
-                                                className="hidden group-hover:block rounded-full"
-                                                onClick={() =>
-                                                    openModal(
-                                                        "project",
-                                                        file.id,
+                    return (
+                        <CollapsibleContent key={project.id}>
+                            <MotionCollapse
+                                initial={{ y: -5, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                exit={{ y: -5, opacity: 0 }}
+                                transition={{ delay: index * 0.1 }}
+                            >
+                                <CollapsibleTrigger className="group transition-all px-2 rounded-lg flex justify-between w-full">
+                                    <div className="flex gap-1 items-center p-2 ml-4">
+                                        <File
+                                            size={14}
+                                            style={{
+                                                color: `${project.collectionsTheme}`,
+                                            }}
+                                        />
+
+                                        {isEditing ? (
+                                            <input
+                                                type="text"
+                                                className="text-[14px] max-w-20"
+                                                onKeyDown={enterKey}
+                                                value={project.collectionName}
+                                                onChange={(e) =>
+                                                    db.collections.update(
+                                                        project.id,
+                                                        {
+                                                            collectionName:
+                                                                e.target.value,
+                                                        },
                                                     )
                                                 }
+                                                onBlur={handleBlur}
+                                                autoFocus
+                                            />
+                                        ) : (
+                                            <h1
+                                                onDoubleClick={(e) => {
+                                                    e.stopPropagation();
+                                                    e.preventDefault();
+                                                    setIsEditing(true);
+                                                }}
+                                                style={{
+                                                    color: `${project.collectionsTheme}`,
+                                                }}
+                                                className="text-[14px] w-20 truncate"
                                             >
-                                                <Minus size={13} />
-                                            </button>
-                                        </NavLink>
-                                    </MotionCollapse>
-                                ))}
-                            </CollapsibleContent>
-                        </MotionCollapse>
-                    </CollapsibleContent>
-                ))}
+                                                {project.collectionName}
+                                            </h1>
+                                        )}
+                                    </div>
+                                    <DropdownWorkspace id={project.id} />
+                                </CollapsibleTrigger>
+
+                                {/* Project children list */}
+                                <CollapsibleContent className="space-y-2 ml-4">
+                                    {project.project.map((file) => (
+                                        <MotionCollapse
+                                            key={file.id}
+                                            initial={{ y: -5, opacity: 0 }}
+                                            animate={{ y: 0, opacity: 1 }}
+                                            exit={{ y: -5, opacity: 0 }}
+                                            transition={{ delay: index * 0.1 }}
+                                            className="group transition-all"
+                                        >
+                                            <NavLink
+                                                key={file.id}
+                                                to={`/project/${file.id}`}
+                                                className={({ isActive }) =>
+                                                    `text-[12px] ml-12  ${isActive ? "underline font-semibold" : null} flex justify-between items-center `
+                                                }
+                                            >
+                                                <p>{file.projectName}</p>
+                                                <button
+                                                    className="hidden group-hover:block rounded-full"
+                                                    onClick={() =>
+                                                        openModal(
+                                                            "project",
+                                                            file.id,
+                                                        )
+                                                    }
+                                                >
+                                                    <Minus size={13} />
+                                                </button>
+                                            </NavLink>
+                                        </MotionCollapse>
+                                    ))}
+                                </CollapsibleContent>
+                            </MotionCollapse>
+                        </CollapsibleContent>
+                    );
+                })}
         </Collapsible>
     );
 }
