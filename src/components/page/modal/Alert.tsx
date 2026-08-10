@@ -16,7 +16,8 @@ function Alert() {
         modalName === "card" ||
         modalName === "column" ||
         modalName === "project" ||
-        modalName === "workspace";
+        modalName === "workspace" ||
+        modalName === "tag";
 
     console.log(modalName, idContainer);
 
@@ -70,6 +71,14 @@ function Alert() {
                 navigate("/");
             }
 
+            if (modalName === "tag") {
+                await db.cards
+                    .where("tagId")
+                    .equals(idContainer)
+                    .modify({ tagId: "default" });
+                await db.tag.delete(idContainer);
+            }
+
             closeModal();
         } catch (error) {
             console.log(error);
@@ -99,7 +108,10 @@ function Alert() {
                     </div>
 
                     <div className="flex gap-3 justify-end">
-                        <button onClick={closeModal} className="text-green-500 text-[16px] active:scale-95 border px-2 py-1 rounded-md hover:bg-green-500 hover:text-white transition-all">
+                        <button
+                            onClick={closeModal}
+                            className="text-green-500 text-[16px] active:scale-95 border px-2 py-1 rounded-md hover:bg-green-500 hover:text-white transition-all"
+                        >
                             Cancel
                         </button>
                         <button

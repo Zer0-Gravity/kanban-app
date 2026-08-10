@@ -166,8 +166,8 @@ function DropdownWorkspace({ id }: { id: string }) {
                     </button>
                 }
             />
-            <DropdownMenuContent className="bg-white ring-0">
-                <DropdownMenuItem className="hover:bg-gray-200">
+            <DropdownMenuContent className="bg-bg-secondary ring-0 text-txt-primary">
+                <DropdownMenuItem className="hover:bg-bg-primary">
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
@@ -179,13 +179,13 @@ function DropdownWorkspace({ id }: { id: string }) {
                         <span className="text-[13px]">Create</span>
                     </button>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="hover:bg-gray-200">
+                <DropdownMenuItem className="hover:bg-bg-primary">
                     <button className="flex gap-2 w-full">
                         <Pen size={13} />
                         <span className="text-[13px]">Rename</span>
                     </button>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="hover:bg-gray-200">
+                <DropdownMenuItem className="hover:bg-bg-primary">
                     <button
                         onClick={() => openModal("workspace", id)}
                         className="flex gap-2 w-full text-red-500"

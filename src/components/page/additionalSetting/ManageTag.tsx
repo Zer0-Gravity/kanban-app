@@ -27,23 +27,15 @@ import {
 } from "../../ui/table";
 
 import { useState } from "react";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from "../../ui/dropdown-menu";
 import { useModal } from "../../../store";
 import type { Tag } from "../../../type";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
+import DropdownTable from "./DropdownTable";
 
 async function deleteTag(id: string) {
     try {
-        await db.cards.where("tagId").equals(id).modify({ tagId: "default" });
-        await db.tag.delete(id);
+        
     } catch (error) {
         console.log(error);
     }
@@ -77,32 +69,7 @@ const columns: ColumnDef<Tag>[] = [
     {
         id: "action",
         header: () => <span>Action</span>,
-        cell: ({ row }) => (
-            <DropdownMenu>
-                <DropdownMenuTrigger>
-                    <MoreHorizontal size={20} />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-white ring-0!">
-                    <DropdownMenuGroup className="space-y-3">
-                        <DropdownMenuLabel className="text-sm">
-                            Menu action
-                        </DropdownMenuLabel>
-
-                        <DropdownMenuItem className="hover:bg-foreground-muted-secondary">
-                            <Pencil />
-                            <span>Update</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                            className="text-red-400 hover:bg-foreground-muted-secondary"
-                            onClick={() => deleteTag(row.original.id)}
-                        >
-                            <Trash />
-                            <span>Delete</span>
-                        </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                </DropdownMenuContent>
-            </DropdownMenu>
-        ),
+        cell: ({ row }) => <DropdownTable tagId={row.original.id} />,
     },
 ];
 
