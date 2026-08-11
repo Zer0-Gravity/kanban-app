@@ -96,20 +96,27 @@ function NewCard() {
                         render={({ field, fieldState: { error } }) => (
                             <div className="space-y-3">
                                 <Popover>
-                                    <PopoverTrigger className="custom-input relative">
-                                        <button className="w-full text-left">
-                                            {field.value ? (
-                                                format(field.value, "PPPP")
-                                            ) : (
-                                                <span className="text-[14px]! text-txt-secondary!">
-                                                    Set deadline date...
-                                                </span>
-                                            )}
-                                            <Calendar1
-                                                size={16}
-                                                className="absolute left-4 top-1/2 -translate-y-1/2"
-                                            />
-                                        </button>
+                                    <PopoverTrigger
+                                        type="button"
+                                        className="custom-input relative"
+                                    >
+                                        <input
+                                            className="w-full h-full pointer-events-none"
+                                            placeholder="Set deadline date..."
+                                            value={
+                                                field.value
+                                                    ? format(
+                                                          field.value,
+                                                          "PPPP",
+                                                      )
+                                                    : ""
+                                            }
+                                        />
+
+                                        <Calendar1
+                                            size={16}
+                                            className="absolute left-4 top-1/2 -translate-y-1/2"
+                                        />
                                     </PopoverTrigger>
                                     <PopoverContent
                                         className="bg-bg-secondary ring-0! outline-0 text-txt-primary"
