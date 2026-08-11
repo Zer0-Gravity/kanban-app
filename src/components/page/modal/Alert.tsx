@@ -92,7 +92,7 @@ function Alert() {
                 if (!open) closeModal();
             }}
         >
-            <DialogContent className="bg-white ring-0">
+            <DialogContent className="bg-bg-secondary ring-0">
                 <DialogHeader>
                     <DialogTitle className="text-[16px] font-semibold">
                         <p className="text-red-500">Delete this {modalName}?</p>

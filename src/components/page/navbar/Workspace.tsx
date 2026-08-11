@@ -35,7 +35,7 @@ export function Workspace({
     setCollapse: Dispatch<SetStateAction<boolean>>;
 }) {
     const { openModal } = useModal();
-    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [isEditing, setIsEditing] = useState<string>("");
     const collectionsTree = useLiveQuery(async () => {
         const parentFolder = await db.collections.toArray();
 
@@ -86,9 +86,9 @@ export function Workspace({
             {/* Projects List */}
             {!isCollapse &&
                 collectionsTree.map((project, index) => {
-                    const handleBlur = () => setIsEditing(false);
+                    const handleBlur = () => setIsEditing("");
                     const enterKey = (event) => {
-                        if (event.key === "Enter") setIsEditing(false);
+                        if (event.key === "Enter") setIsEditing("");
                     };
 
                     return (
@@ -100,7 +100,7 @@ export function Workspace({
                                 transition={{ delay: index * 0.1 }}
                             >
                                 <CollapsibleTrigger className="group transition-all px-2 rounded-lg flex justify-between w-full">
-                                    <div className="flex gap-1 items-center p-2 ml-4">
+                                    <div className="flex gap-1 justify-center p-2 ml-4">
                                         <File
                                             size={14}
                                             style={{
@@ -108,7 +108,7 @@ export function Workspace({
                                             }}
                                         />
 
-                                        {isEditing ? (
+                                        {isEditing === project.id ? (
                                             <input
                                                 type="text"
                                                 className="text-[14px] max-w-20"
@@ -131,12 +131,12 @@ export function Workspace({
                                                 onDoubleClick={(e) => {
                                                     e.stopPropagation();
                                                     e.preventDefault();
-                                                    setIsEditing(true);
+                                                    setIsEditing(project.id);
                                                 }}
                                                 style={{
                                                     color: `${project.collectionsTheme}`,
                                                 }}
-                                                className="text-[14px] w-20 truncate"
+                                                className="text-[14px] w-20 truncate text-left"
                                             >
                                                 {project.collectionName}
                                             </h1>
