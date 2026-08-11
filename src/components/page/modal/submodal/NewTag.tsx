@@ -47,7 +47,7 @@ function NewTag() {
                     <CustomInputField
                         icon={Tags}
                         name="tagName"
-                        label="Task title"
+                        label="Tag name"
                         placeholder="Task title..."
                     />
 

@@ -5,6 +5,7 @@ import NewCollections from "./submodal/NewCollections";
 import NewProject from "./submodal/NewProject";
 import NewTag from "./submodal/NewTag";
 import NewTask from "./submodal/NewTask";
+import UpdateTag from "./UpdateTag";
 
 function MainModal() {
     return (
@@ -16,6 +17,7 @@ function MainModal() {
             <NewCollections />
             <NewTag />
             <Alert />
+            <UpdateTag />
         </>
     );
 }

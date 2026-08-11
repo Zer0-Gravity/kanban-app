@@ -18,7 +18,10 @@ function DropdownTable({ tagId }: { tagId: string }) {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-bg-primary text-primary ring-0!">
                 <DropdownMenuGroup className="space-y-3">
-                    <DropdownMenuItem className="hover:bg-bg-secondary">
+                    <DropdownMenuItem
+                        className="hover:bg-bg-secondary"
+                        onClick={() => openModal("update-tag", tagId)}
+                    >
                         <Pencil />
                         <span>Update</span>
                     </DropdownMenuItem>

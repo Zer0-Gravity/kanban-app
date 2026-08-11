@@ -1,11 +1,4 @@
-import {
-    MoreHorizontal,
-    PackageOpen,
-    Pencil,
-    Plus,
-    Tags,
-    Trash,
-} from "lucide-react";
+import { PackageOpen, Plus, Tags } from "lucide-react";
 import Button from "../utilityComponent/Button";
 
 import {
@@ -32,14 +25,6 @@ import type { Tag } from "../../../type";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../../db";
 import DropdownTable from "./DropdownTable";
-
-async function deleteTag(id: string) {
-    try {
-        
-    } catch (error) {
-        console.log(error);
-    }
-}
 
 const columns: ColumnDef<Tag>[] = [
     {
@@ -161,7 +146,7 @@ function ManageTag() {
                             table.getRowModel().rows.map((row) => (
                                 <TableRow key={row.id}>
                                     {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={row.id}>
+                                        <TableCell key={cell.id}>
                                             {flexRender(
                                                 cell.column.columnDef.cell,
                                                 cell.getContext(),
