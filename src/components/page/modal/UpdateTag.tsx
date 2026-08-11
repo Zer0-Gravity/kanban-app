@@ -23,7 +23,11 @@ const color_preset = [
 
 function UpdateTag() {
     const { idContainer, closeModal } = useModal();
-    const tagDb = useLiveQuery(() => db.tag.get(idContainer));
+    const tagDb = useLiveQuery(() => {
+        if (!idContainer) return; //Check if id is not undefined
+
+        return db.tag.get(idContainer);
+    }, [idContainer]);
 
     const { register, handleSubmit, reset, control } = useForm({
         defaultValues: {
