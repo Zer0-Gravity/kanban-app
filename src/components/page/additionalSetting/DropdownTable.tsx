@@ -22,14 +22,14 @@ function DropdownTable({ tagId }: { tagId: string }) {
                         className="hover:bg-bg-secondary"
                         onClick={() => openModal("update-tag", tagId)}
                     >
-                        <Pencil />
+                        <Pencil size={12} className="text-txt-primary" />
                         <span>Update</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         className="text-red-400 hover:bg-bg-secondary"
                         onClick={() => openModal("tag", tagId)}
                     >
-                        <Trash />
+                        <Trash size={12} />
                         <span>Delete</span>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>

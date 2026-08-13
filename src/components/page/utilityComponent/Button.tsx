@@ -23,7 +23,7 @@ export default function Button({
             className={`flex items-center text-[14px] gap-2.5 px-2 py-2 rounded-lg ${customClass} active:scale-95 transition-all`}
         >
             <Icon size={14} />
-            <span className="font-semibold text-white">{children}</span>
+            <span className="font-semibold">{children}</span>
         </button>
     );
 }

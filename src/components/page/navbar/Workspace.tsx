@@ -13,7 +13,6 @@ import {
     HardDrive,
     Minus,
     MoreHorizontal,
-    Pen,
     Plus,
     Trash,
 } from "lucide-react";
@@ -210,12 +209,6 @@ function DropdownWorkspace({ id }: { id: string }) {
                     >
                         <Plus size={13} />
                         <span className="text-[13px]">Create</span>
-                    </button>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="hover:bg-bg-primary">
-                    <button className="flex gap-2 w-full">
-                        <Pen size={13} />
-                        <span className="text-[13px]">Rename</span>
                     </button>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="hover:bg-bg-primary">

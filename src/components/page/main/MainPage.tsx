@@ -1,10 +1,4 @@
-import {
-    CloudUpload,
-    Database,
-    ExternalLink,
-    File,
-    Folder,
-} from "lucide-react";
+import { ExternalLink, File, Folder } from "lucide-react";
 import Button from "../utilityComponent/Button";
 import { useModal } from "../../../store";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -21,7 +15,7 @@ function MainPage() {
     if (!dbProject) return;
 
     return (
-        <main className="w-full md:w-162.5 space-y-5 p-3 text-txt-secondary">
+        <main className="w-full md:w-162.5 space-y-5 p-3 text-txt-primary">
             <div className="flex items-center">
                 <img
                     src="/logo-kanban.svg"
@@ -39,12 +33,10 @@ function MainPage() {
                 off!
             </p>
             <div className="flex gap-5">
-                <Button icon={Folder} onClick={() => openModal("new-project")}>
-                    Create Project
-                </Button>
                 <Button
                     icon={File}
                     onClick={() => openModal("new-collections")}
+                    customClass="border"
                 >
                     Create Workspace
                 </Button>
@@ -78,14 +70,6 @@ function MainPage() {
                             one!
                         </span>
                     )}
-                </div>
-                <div className="flex gap-5 justify-end">
-                    <Button icon={Database} customClass="border">
-                        Import Data
-                    </Button>
-                    <Button icon={CloudUpload} customClass="border">
-                        Export Data
-                    </Button>
                 </div>
             </div>
         </main>
