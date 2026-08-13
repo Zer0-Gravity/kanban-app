@@ -65,12 +65,14 @@ function MainPage() {
                             </div>
                         ))
                     ) : (
-                        <div className="h-full w-full">
-                            <File size={16} />
-                            <span>
-                                Your recent project will appear here once you
-                                create one!
-                            </span>
+                        <div className="h-full flex gap-2 justify-center items-center p-5 rounded-lg">
+                            <div className="flex gap-2 items-center border p-4 rounded-lg">
+                                <File size={16} />
+                                <span>
+                                    Your recent project will appear here once
+                                    you create one!
+                                </span>
+                            </div>
                         </div>
                     )}
                 </div>

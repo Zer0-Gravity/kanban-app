@@ -58,7 +58,7 @@ function NewTask() {
                             customClass="bg-button text-white"
                             type="submit"
                         >
-                            Save
+                            <span className="text-white"> Save</span>
                         </Button>
                     </div>
                 </form>

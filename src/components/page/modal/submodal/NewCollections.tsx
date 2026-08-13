@@ -63,7 +63,7 @@ function NewCollections() {
                             customClass="bg-button text-white justify-end"
                             type="submit"
                         >
-                            Save
+                            <span className="text-white">Save</span>
                         </Button>
                     </div>
                 </form>

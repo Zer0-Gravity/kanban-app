@@ -54,14 +54,14 @@ function SelectField({
                                 value={field.value}
                                 onValueChange={field.onChange}
                             >
-                                <SelectTrigger className="custom-input ring-0! ">
+                                <SelectTrigger className="custom-input ring-0 border-0">
                                     <SelectValue
                                         className="text-black"
                                         placeholder={placeholder}
                                     />
                                 </SelectTrigger>
                                 <SelectContent
-                                    className="bg-bg-secondary"
+                                    className="bg-bg-secondary ring-0"
                                     alignOffset={10}
                                 >
                                     <SelectGroup>

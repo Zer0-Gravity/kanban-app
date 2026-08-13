@@ -63,7 +63,7 @@ function NewProject() {
                             type="submit"
                             customClass="bg-button text-white"
                         >
-                            Save
+                            <span className="text-white">Save</span>
                         </Button>
                     </div>
                 </form>

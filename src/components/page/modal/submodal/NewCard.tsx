@@ -133,7 +133,7 @@ function NewCard() {
                                                 disabled:
                                                     "pointer-event-none line-through",
                                                 selected:
-                                                    "bg-bg-primary text-white rounded-full ring-0! outline-none!",
+                                                    "bg-bg-primary text-txt-primary rounded-full ring-0",
                                                 today: "bg-bg-primary rounded-full",
                                             }}
                                         />
@@ -169,7 +169,7 @@ function NewCard() {
                             customClass="bg-button text-white"
                             type="submit"
                         >
-                            Save
+                            <span className="text-white">Save</span>
                         </Button>
                     </div>
                 </form>

@@ -61,7 +61,7 @@ function ComboxTag() {
                             <div className="relative">
                                 <ComboboxInput
                                     placeholder="Search tag.. "
-                                    className="custom-input"
+                                    className="custom-input border-0"
                                 />
 
                                 <TagsIcon

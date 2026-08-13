@@ -142,7 +142,7 @@ function KanbanBoard({ activeProject }: { activeProject: string }) {
                         onClick={() => openModal("new-board", activeProject)}
                         customClass="bg-button text-white"
                     >
-                        Column
+                        <span className="text-white">Column</span>
                     </Button>
                 </div>
 
