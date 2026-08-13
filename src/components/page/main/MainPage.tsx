@@ -1,4 +1,4 @@
-import { ExternalLink, File, Folder } from "lucide-react";
+import { ExternalLink, File } from "lucide-react";
 import Button from "../utilityComponent/Button";
 import { useModal } from "../../../store";
 import { useLiveQuery } from "dexie-react-hooks";
@@ -65,10 +65,13 @@ function MainPage() {
                             </div>
                         ))
                     ) : (
-                        <span>
-                            Your recent project will appear here once you create
-                            one!
-                        </span>
+                        <div className="h-full w-full">
+                            <File size={16} />
+                            <span>
+                                Your recent project will appear here once you
+                                create one!
+                            </span>
+                        </div>
                     )}
                 </div>
             </div>
