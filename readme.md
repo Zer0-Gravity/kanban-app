@@ -46,3 +46,33 @@ myKanban is a lightweight productivity tool designed to help users manage their 
 ##### Handling Date and Time Remaining
 * **Challenge**: The card need to display their remaining days or hours before the deadline ended and safely trigger style change to remind the user
 * **Solution** : Make a custom utility helper using `date-fns` library with their `IntervalDuration` helper and `formatDuration`, then return their corresponding feedback 
+
+### Demo
+
+##### Creating your workshop collections and project
+
+<img src="./src/assets/Gif/CreatingWorkshopandProject.gif" width="600">
+
+
+##### Creating Card and Board
+
+<img src="./src/assets/Gif/CreateBoardandCard.gif" width="600">
+
+##### Draggable Card and Board
+
+<img src="./src/assets/Gif/Arrangecardandcolumn.gif" width="600">
+
+##### Track your task progress
+
+<img src="./src/assets/Gif/TrackProgressTask.gif" width="600">
+
+##### Manage and add your tag
+
+<img src="./src/assets/Gif/ManageTag.gif" width="600">
+
+##### Dark and Light mode
+
+<img src="./src/assets/Gif/Theme.gif" width="600">
+
+
+## Installation
